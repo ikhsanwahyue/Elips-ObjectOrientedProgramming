@@ -1,4 +1,4 @@
-# pElips - Object-Oriented Programming Theory Project
+# Elips - Object-Oriented Programming Theory Project
 
 Proyek ini mendemonstrasikan penerapan 5 Pilar Konsep Object-Oriented sesuai materi perkuliahan:
 
