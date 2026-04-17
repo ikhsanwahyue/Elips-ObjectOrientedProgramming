@@ -17,10 +17,3 @@ Menerapkan perubahan perilaku method class induk di class anak dan penggunaan sa
 ### 5. Multithreading
 Mengimplementasikan pengolahan proses secara paralel menggunakan class `Thread` dan interface `Runnable`, termasuk pengelolaan siklus hidup thread (Ready, Running, Dead).
 
----
-**Anggota Kelompok:**
-- Ikhsan Wahyu Endriarto
-- Aziz Nabil Putra Darnawan
-- Muhamad Garnida Bareta
-- Lahar Nuansa Putra
-- Muhamad Hasan Rabbani
