@@ -8,6 +8,9 @@ package pElips.model;
  *
  * @author LENOVO
  */
-public class KalkulasiGeometri {
-    
+public interface KalkulasiGeometri {
+    // Method abstract (tanpa bodi) yang wajib di-override oleh class yang mengimplementasikannya
+    public abstract double hitungLuas();
+    public abstract double hitungKeliling();
+    public abstract double hitungVolume();
 }
