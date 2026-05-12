@@ -10,9 +10,11 @@ package pElips.model;
  * 
  * Pilar OOP yang diterapkan:
  * 1. Encapsulation & Information Hiding - atribut private untuk sumbu atas
- * 2. Inheritance - extends KerucutDenganALasElips (mewarisi sumbuA, sumbuB, tinggi)
+ * 2. Inheritance - extends KerucutDenganALasElips (mewarisi sumbuA, sumbuB,
+ * tinggi)
  * 3. Overloading - dua constructor dengan parameter berbeda
- * 4. Overriding & Polymorphism - override hitungLuas(), hitungVolume(), cetakInfo()
+ * 4. Overriding & Polymorphism - override hitungLuas(), hitungVolume(),
+ * cetakInfo()
  * 5. Multithreading - kompatibel dengan KalkulasiThread
  *
  * Keterangan:
@@ -23,9 +25,9 @@ package pElips.model;
  * Rumus:
  * - Volume = (1/3) * π * t * (a1*b1 + a2*b2 + √(a1*b1*a2*b2))
  * - Luas Alas Bawah = π * a1 * b1
- * - Luas Alas Atas  = π * a2 * b2
- * - Luas Selimut ≈ (1/2) * (K_bawah + K_atas) * s  (pendekatan)
- *   dimana s = √(t² + ((a1-a2+b1-b2)/2)²) sebagai garis pelukis rata-rata
+ * - Luas Alas Atas = π * a2 * b2
+ * - Luas Selimut ≈ (1/2) * (K_bawah + K_atas) * s (pendekatan)
+ * dimana s = √(t² + ((a1-a2+b1-b2)/2)²) sebagai garis pelukis rata-rata
  * - Luas Total = Luas Alas Bawah + Luas Alas Atas + Luas Selimut
  *
  * @author Lahar
@@ -49,15 +51,16 @@ public class KerucutTerpancungDenganAlasElips extends KerucutDenganALasElips {
     /**
      * Pilar: OVERLOADING (Constructor 2)
      * Constructor lengkap dengan parameter alas bawah, alas atas, dan tinggi.
-     * @param nama Nama benda geometri
-     * @param a1 Sumbu semi-mayor alas bawah (elips besar)
-     * @param b1 Sumbu semi-minor alas bawah (elips besar)
-     * @param a2 Sumbu semi-mayor alas atas (elips kecil)
-     * @param b2 Sumbu semi-minor alas atas (elips kecil)
+     * 
+     * @param nama   Nama benda geometri
+     * @param a1     Sumbu semi-mayor alas bawah (elips besar)
+     * @param b1     Sumbu semi-minor alas bawah (elips besar)
+     * @param a2     Sumbu semi-mayor alas atas (elips kecil)
+     * @param b2     Sumbu semi-minor alas atas (elips kecil)
      * @param tinggi Tinggi kerucut terpancung
      */
     public KerucutTerpancungDenganAlasElips(String nama, double a1, double b1,
-                                             double a2, double b2, double tinggi) {
+            double a2, double b2, double tinggi) {
         super(nama, a1, b1, tinggi);
         this.sumbuA2 = a2;
         this.sumbuB2 = b2;
@@ -141,8 +144,8 @@ public class KerucutTerpancungDenganAlasElips extends KerucutDenganALasElips {
      */
     @Override
     public double hitungVolume() {
-        double ab1 = sumbuA * sumbuB;     // produk sumbu alas bawah
-        double ab2 = sumbuA2 * sumbuB2;   // produk sumbu alas atas
+        double ab1 = sumbuA * sumbuB; // produk sumbu alas bawah
+        double ab2 = sumbuA2 * sumbuB2; // produk sumbu alas atas
         return (1.0 / 3.0) * Math.PI * getTinggi() * (ab1 + ab2 + Math.sqrt(ab1 * ab2));
     }
 
