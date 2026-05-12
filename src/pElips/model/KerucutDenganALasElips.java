@@ -11,20 +11,21 @@ package pElips.model;
  * 1. Encapsulation & Information Hiding - atribut tinggi bersifat private
  * 2. Inheritance - extends Elips (mewarisi sumbuA, sumbuB)
  * 3. Overloading - dua constructor dengan parameter berbeda
- * 4. Overriding & Polymorphism - override hitungLuas(), hitungVolume(), hitungKeliling(), cetakInfo()
+ * 4. Overriding & Polymorphism - override hitungLuas(), hitungVolume(),
+ * hitungKeliling(), cetakInfo()
  * 5. Multithreading - kompatibel dengan KalkulasiThread
  *
  * Rumus:
  * - Volume = (1/3) * π * a * b * t
- * - Luas Selimut ≈ π * a * s1  +  π * b * s2  (pendekatan untuk alas elips)
- *   dimana s1 = √(b² + t²), s2 = √(a² + t²)
+ * - Luas Selimut ≈ π * a * s1 + π * b * s2 (pendekatan untuk alas elips)
+ * dimana s1 = √(b² + t²), s2 = √(a² + t²)
  * - Luas Alas = π * a * b (luas elips)
  * - Luas Total = Luas Selimut + Luas Alas
  * - Keliling Alas menggunakan rumus pendekatan Ramanujan (diwarisi dari Elips)
  *
  * @author Lahar
  */
-public class KerucutDenganALasElips extends Elips {
+public class KerucutDenganAlasElips extends Elips {
 
     // Encapsulation: atribut private untuk keamanan data
     private double tinggi;
@@ -33,7 +34,7 @@ public class KerucutDenganALasElips extends Elips {
      * Pilar: OVERLOADING (Constructor 1)
      * Constructor default jika tinggi belum diketahui.
      */
-    public KerucutDenganALasElips(String nama) {
+    public KerucutDenganAlasElips(String nama) {
         super(nama);
         this.tinggi = 0;
     }
@@ -42,7 +43,7 @@ public class KerucutDenganALasElips extends Elips {
      * Pilar: OVERLOADING (Constructor 2)
      * Constructor lengkap dengan parameter sumbu A, sumbu B, dan tinggi.
      */
-    public KerucutDenganALasElips(String nama, double a, double b, double tinggi) {
+    public KerucutDenganAlasElips(String nama, double a, double b, double tinggi) {
         super(nama, a, b);
         this.tinggi = tinggi;
     }
@@ -79,8 +80,8 @@ public class KerucutDenganALasElips extends Elips {
      * Menghitung luas permukaan total kerucut dengan alas elips.
      * Luas Total = Luas Alas + Luas Selimut
      * Luas Alas = π * a * b
-     * Luas Selimut ≈ π * a * s1 + π * b * s2  (pendekatan)
-     *   dimana s1 = √(b² + t²), s2 = √(a² + t²)
+     * Luas Selimut ≈ π * a * s1 + π * b * s2 (pendekatan)
+     * dimana s1 = √(b² + t²), s2 = √(a² + t²)
      */
     @Override
     public double hitungLuas() {

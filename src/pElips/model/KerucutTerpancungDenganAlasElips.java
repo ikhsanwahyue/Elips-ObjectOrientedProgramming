@@ -32,7 +32,7 @@ package pElips.model;
  *
  * @author Lahar
  */
-public class KerucutTerpancungDenganAlasElips extends KerucutDenganALasElips {
+public class KerucutTerpancungDenganAlasElips extends KerucutDenganAlasElips {
 
     // Encapsulation: atribut private untuk dimensi elips bagian atas
     private double sumbuA2; // Sumbu semi-mayor alas atas
