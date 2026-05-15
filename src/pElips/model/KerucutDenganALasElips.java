@@ -128,7 +128,7 @@ public class KerucutDenganAlasElips extends Elips {
         System.out.println("Garis Pelukis s2     : " + String.format("%.2f", hitungSlantHeight2()));
         System.out.println("Luas Alas (Elips)    : " + String.format("%.2f", Math.PI * sumbuA * sumbuB));
         System.out.println("Luas Permukaan Total : " + String.format("%.2f", hitungLuas()));
-        System.out.println("Keliling Alas         : " + String.format("%.2f", hitungKeliling()));
+        System.out.println("Keliling Alas        : " + String.format("%.2f", hitungKeliling()));
         System.out.println("Volume               : " + String.format("%.2f", hitungVolume()));
     }
 }
