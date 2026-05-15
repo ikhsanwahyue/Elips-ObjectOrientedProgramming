@@ -9,7 +9,8 @@ import java.util.Scanner;
 import java.util.ArrayList;
 
 /**
- * Class SimulasiHitung - Main class untuk menjalankan semua simulasi perhitungan
+ * Class SimulasiHitung - Main class untuk menjalankan semua simulasi
+ * perhitungan
  * benda geometri berbasis Elips secara dinamis dengan input dari user.
  * 
  * Mendemonstrasikan 5 Pilar PBO:
@@ -89,14 +90,30 @@ public class SimulasiHitung {
         BendaGeometri benda = null;
 
         switch (jenis) {
-            case 1: benda = inputElips(); break;
-            case 2: benda = inputBola(); break;
-            case 3: benda = inputTabung(); break;
-            case 4: benda = inputKerucut(); break;
-            case 5: benda = inputKerucutTerpancung(); break;
-            case 6: benda = inputCincin(); break;
-            case 7: benda = inputJuring(); break;
-            case 8: benda = inputTembereng(); break;
+            case 1:
+                benda = inputElips();
+                break;
+            case 2:
+                benda = inputBola();
+                break;
+            case 3:
+                benda = inputTabung();
+                break;
+            case 4:
+                benda = inputKerucut();
+                break;
+            case 5:
+                benda = inputKerucutTerpancung();
+                break;
+            case 6:
+                benda = inputCincin();
+                break;
+            case 7:
+                benda = inputJuring();
+                break;
+            case 8:
+                benda = inputTembereng();
+                break;
             default:
                 System.out.println("[!] Pilihan tidak valid.");
                 return;
