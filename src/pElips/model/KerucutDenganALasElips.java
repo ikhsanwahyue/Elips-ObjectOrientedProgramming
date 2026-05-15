@@ -23,7 +23,7 @@ package pElips.model;
  * - Luas Total = Luas Selimut + Luas Alas
  * - Keliling Alas menggunakan rumus pendekatan Ramanujan (diwarisi dari Elips)
  *
- * @author Lahar
+ * @author Lahar 2
  */
 public class KerucutDenganAlasElips extends Elips {
 
