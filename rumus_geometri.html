@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Rumus Benda Geometri — Projek Akhir PBO 2</title>
+<script>
+window.MathJax = { tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Inter',sans-serif; background:#0f0f1a; color:#e0e0f0; padding:40px 60px; }
+  @media print {
+    body { background:#fff; color:#111; padding:20px 40px; }
+    .card { background:#f8f8fc !important; border:1px solid #ccc !important; break-inside:avoid; }
+    .card h2 { color:#1a3a8a !important; }
+    .badge { background:#dde4f0 !important; color:#1a3a8a !important; }
+    h1 { color:#111 !important; }
+    .subtitle { color:#555 !important; }
+    .formula-row { background:#f0f0f8 !important; }
+    .formula-label { color:#333 !important; }
+    .var-table th { background:#dde4f0 !important; color:#1a3a8a !important; }
+    .var-table td, .var-table th { border-color:#ccc !important; color:#222 !important; }
+    .note { background:#eef !important; color:#333 !important; }
+  }
+  h1 { text-align:center; font-size:28px; font-weight:800; color:#a0b4ff; margin-bottom:4px; }
+  .subtitle { text-align:center; font-size:14px; color:#8888aa; margin-bottom:36px; }
+  .card {
+    background:#1a1a2e; border:1px solid #2a2a4a; border-radius:14px;
+    padding:24px 28px; margin-bottom:24px;
+  }
+  .card h2 { font-size:20px; font-weight:700; color:#6c8cff; margin-bottom:4px; }
+  .card .desc { font-size:13px; color:#8888aa; margin-bottom:16px; }
+  .badge {
+    display:inline-block; background:#2a2a5a; color:#8cacff; font-size:11px;
+    font-weight:600; padding:3px 10px; border-radius:20px; margin-bottom:12px;
+  }
+  .formula-row {
+    background:#12122a; border-radius:8px; padding:14px 18px; margin-bottom:10px;
+  }
+  .formula-label { font-size:12px; font-weight:600; color:#7a8aaa; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.5px; }
+  .formula-math { font-size:17px; }
+  .var-table { width:100%; border-collapse:collapse; margin-top:12px; font-size:13px; }
+  .var-table th { background:#1e1e3a; color:#8cacff; text-align:left; padding:8px 12px; border:1px solid #2a2a4a; }
+  .var-table td { padding:8px 12px; border:1px solid #2a2a4a; color:#c0c0d0; }
+  .note { background:#1a1a30; border-left:3px solid #6c8cff; padding:10px 14px; margin-top:12px; font-size:12px; color:#9a9abb; border-radius:0 6px 6px 0; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  @media print { .grid2 { grid-template-columns:1fr 1fr; } }
+</style>
+</head>
+<body>
+
+<h1>📐 Rumus Benda Geometri</h1>
+<p class="subtitle">Projek Akhir PBO 2 — Simulasi Hitung Benda Geometri Elips</p>
+
+<!-- ==================== 1. ELIPS ==================== -->
+<div class="card">
+  <span class="badge">2D — Benda Dasar</span>
+  <h2>1. Elips</h2>
+  <p class="desc">Bentuk dasar 2D dengan dua sumbu (semi-mayor dan semi-minor).</p>
+  <div class="grid2">
+    <div class="formula-row">
+      <div class="formula-label">Luas</div>
+      <div class="formula-math">$L = \pi \cdot a \cdot b$</div>
+    </div>
+    <div class="formula-row">
+      <div class="formula-label">Keliling (Ramanujan)</div>
+      <div class="formula-math">$K \approx \pi \left[ 3(a+b) - \sqrt{(3a+b)(a+3b)} \right]$</div>
+    </div>
+  </div>
+  <div class="formula-row" style="margin-top:10px">
+    <div class="formula-label">Volume</div>
+    <div class="formula-math">$V = 0$ &nbsp;(benda 2D)</div>
+  </div>
+  <table class="var-table">
+    <tr><th>Variabel</th><th>Keterangan</th></tr>
+    <tr><td>$a$</td><td>Sumbu semi-mayor (sumbu panjang)</td></tr>
+    <tr><td>$b$</td><td>Sumbu semi-minor (sumbu pendek)</td></tr>
+  </table>
+</div>
+
+<!-- ==================== 2. BOLA ==================== -->
+<div class="card">
+  <span class="badge">3D — extends BendaGeometri</span>
+  <h2>2. Bola</h2>
+  <p class="desc">Bangun ruang simetris sempurna dengan satu jari-jari.</p>
+  <div class="grid2">
+    <div class="formula-row">
+      <div class="formula-label">Luas Permukaan</div>
+      <div class="formula-math">$L = 4 \pi r^2$</div>
+    </div>
+    <div class="formula-row">
+      <div class="formula-label">Keliling Lingkaran Besar</div>
+      <div class="formula-math">$K = 2 \pi r$</div>
+    </div>
+  </div>
+  <div class="formula-row" style="margin-top:10px">
+    <div class="formula-label">Volume</div>
+    <div class="formula-math">$V = \dfrac{4}{3} \pi r^3$</div>
+  </div>
+  <table class="var-table">
+    <tr><th>Variabel</th><th>Keterangan</th></tr>
+    <tr><td>$r$</td><td>Jari-jari bola</td></tr>
+  </table>
+</div>
+
+<!-- ==================== 3. TABUNG ==================== -->
+<div class="card">
+  <span class="badge">3D — extends BendaGeometri</span>
+  <h2>3. Tabung</h2>
+  <p class="desc">Silinder dengan alas dan tutup berbentuk lingkaran.</p>
+  <div class="grid2">
+    <div class="formula-row">
+      <div class="formula-label">Luas Permukaan</div>
+      <div class="formula-math">$L = 2 \pi r (r + t)$</div>
+    </div>
+    <div class="formula-row">
+      <div class="formula-label">Keliling Alas</div>
+      <div class="formula-math">$K = 2 \pi r$</div>
+    </div>
+  </div>
+  <div class="formula-row" style="margin-top:10px">
+    <div class="formula-label">Volume</div>
+    <div class="formula-math">$V = \pi r^2 t$</div>
+  </div>
+  <table class="var-table">
+    <tr><th>Variabel</th><th>Keterangan</th></tr>
+    <tr><td>$r$</td><td>Jari-jari alas</td></tr>
+    <tr><td>$t$</td><td>Tinggi tabung</td></tr>
+  </table>
+</div>
+
+<!-- ==================== 4. KERUCUT ALAS ELIPS ==================== -->
+<div class="card">
+  <span class="badge">3D — extends Elips</span>
+  <h2>4. Kerucut Dengan Alas Elips</h2>
+  <p class="desc">Limas 3D dengan alas berbentuk elips dan satu titik puncak.</p>
+  <div class="formula-row">
+    <div class="formula-label">Luas Alas (Elips)</div>
+    <div class="formula-math">$L_{alas} = \pi \cdot a \cdot b$</div>
+  </div>
+  <div class="formula-row">
+    <div class="formula-label">Garis Pelukis</div>
+    <div class="formula-math">$s_1 = \sqrt{b^2 + t^2} \qquad s_2 = \sqrt{a^2 + t^2}$</div>
+  </div>
+  <div class="formula-row">
+    <div class="formula-label">Luas Selimut (Pendekatan)</div>
+    <div class="formula-math">$L_{selimut} \approx \dfrac{\pi (a \cdot s_1 + b \cdot s_2)}{2}$</div>
+  </div>
+  <div class="formula-row">
+    <div class="formula-label">Luas Permukaan Total</div>
+    <div class="formula-math">$L_{total} = L_{alas} + L_{selimut}$</div>
+  </div>
+  <div class="grid2">
+    <div class="formula-row">
+      <div class="formula-label">Keliling Alas (Ramanujan)</div>
+      <div class="formula-math">$K \approx \pi \left[ 3(a+b) - \sqrt{(3a+b)(a+3b)} \right]$</div>
+    </div>
+    <div class="formula-row">
+      <div class="formula-label">Volume</div>
+      <div class="formula-math">$V = \dfrac{1}{3} \pi \cdot a \cdot b \cdot t$</div>
+    </div>
+  </div>
+  <table class="var-table">
+    <tr><th>Variabel</th><th>Keterangan</th></tr>
+    <tr><td>$a$</td><td>Sumbu semi-mayor elips alas</td></tr>
+    <tr><td>$b$</td><td>Sumbu semi-minor elips alas</td></tr>
+    <tr><td>$t$</td><td>Tinggi kerucut</td></tr>
+  </table>
+</div>
+
+<!-- ==================== 5. KERUCUT TERPANCUNG ==================== -->
+<div class="card">
+  <span class="badge">3D — extends KerucutDenganAlasElips</span>
+  <h2>5. Kerucut Terpancung Dengan Alas Elips</h2>
+  <p class="desc">Frustum — kerucut yang dipotong sejajar alas, menghasilkan dua penampang elips.</p>
+  <div class="grid2">
+    <div class="formula-row">
+      <div class="formula-label">Luas Alas Bawah</div>
+      <div class="formula-math">$L_{bawah} = \pi \cdot a_1 \cdot b_1$</div>
+    </div>
+    <div class="formula-row">
+      <div class="formula-label">Luas Alas Atas</div>
+      <div class="formula-math">$L_{atas} = \pi \cdot a_2 \cdot b_2$</div>
+    </div>
+  </div>
+  <div class="formula-row">
+    <div class="formula-label">Garis Pelukis Rata-rata</div>
+    <div class="formula-math">$s = \sqrt{t^2 + \dfrac{(a_1 - a_2)^2 + (b_1 - b_2)^2}{2}}$</div>
+  </div>
+  <div class="formula-row">
+    <div class="formula-label">Luas Selimut</div>
+    <div class="formula-math">$L_{selimut} \approx \dfrac{1}{2} (K_{bawah} + K_{atas}) \cdot s$</div>
+  </div>
+  <div class="formula-row">
+    <div class="formula-label">Luas Permukaan Total</div>
+    <div class="formula-math">$L_{total} = L_{bawah} + L_{atas} + L_{selimut}$</div>
+  </div>
+  <div class="grid2">
+    <div class="formula-row">
+      <div class="formula-label">Keliling Gabungan</div>
+      <div class="formula-math">$K = K_{bawah} + K_{atas}$</div>
+    </div>
+    <div class="formula-row">
+      <div class="formula-label">Volume</div>
+      <div class="formula-math">$V = \dfrac{1}{3} \pi t \left( a_1 b_1 + a_2 b_2 + \sqrt{a_1 b_1 \cdot a_2 b_2} \right)$</div>
+    </div>
+  </div>
+  <table class="var-table">
+    <tr><th>Variabel</th><th>Keterangan</th></tr>
+    <tr><td>$a_1, b_1$</td><td>Sumbu semi-mayor & semi-minor alas bawah</td></tr>
+    <tr><td>$a_2, b_2$</td><td>Sumbu semi-mayor & semi-minor alas atas</td></tr>
+    <tr><td>$t$</td><td>Tinggi kerucut terpancung</td></tr>
+  </table>
+  <div class="note">📌 Keliling setiap elips dihitung dengan pendekatan Ramanujan: $K \approx \pi \left[ 3(a+b) - \sqrt{(3a+b)(a+3b)} \right]$</div>
+</div>
+
+<!-- ==================== 6. CINCIN ==================== -->
+<div class="card">
+  <span class="badge">3D — extends Bola</span>
+  <h2>6. Cincin (Torus)</h2>
+  <p class="desc">Bentuk donat — tabung yang dilengkungkan mengelilingi sumbu pusat.</p>
+  <div class="grid2">
+    <div class="formula-row">
+      <div class="formula-label">Luas Permukaan</div>
+      <div class="formula-math">$L = 4 \pi^2 R r$</div>
+    </div>
+    <div class="formula-row">
+      <div class="formula-label">Keliling Luar</div>
+      <div class="formula-math">$K = 2 \pi (R + r)$</div>
+    </div>
+  </div>
+  <div class="formula-row" style="margin-top:10px">
+    <div class="formula-label">Volume</div>
+    <div class="formula-math">$V = 2 \pi^2 R r^2$</div>
+  </div>
+  <table class="var-table">
+    <tr><th>Variabel</th><th>Keterangan</th></tr>
+    <tr><td>$R$</td><td>Jari-jari mayor (jarak pusat torus ke pusat tabung)</td></tr>
+    <tr><td>$r$</td><td>Jari-jari minor (radius penampang tabung)</td></tr>
+  </table>
+</div>
+
+<!-- ==================== 7. JURING ==================== -->
+<div class="card">
+  <span class="badge">3D — extends Bola</span>
+  <h2>7. Juring Bola (Spherical Sector)</h2>
+  <p class="desc">Potongan bola berbentuk kerucut — terdiri dari topi bola dan kerucut di bawahnya.</p>
+  <div class="formula-row">
+    <div class="formula-label">Jari-jari Alas Kerucut</div>
+    <div class="formula-math">$a = \sqrt{h(2r - h)}$</div>
+  </div>
+  <div class="grid2">
+    <div class="formula-row">
+      <div class="formula-label">Luas Permukaan</div>
+      <div class="formula-math">$L = \pi r (2h + a)$</div>
+    </div>
+    <div class="formula-row">
+      <div class="formula-label">Keliling Alas</div>
+      <div class="formula-math">$K = 2 \pi a$</div>
+    </div>
+  </div>
+  <div class="formula-row" style="margin-top:10px">
+    <div class="formula-label">Volume</div>
+    <div class="formula-math">$V = \dfrac{2}{3} \pi r^2 h$</div>
+  </div>
+  <table class="var-table">
+    <tr><th>Variabel</th><th>Keterangan</th></tr>
+    <tr><td>$r$</td><td>Jari-jari bola</td></tr>
+    <tr><td>$h$</td><td>Tinggi topi bola (spherical cap height)</td></tr>
+    <tr><td>$a$</td><td>Jari-jari alas kerucut (dihitung dari $r$ dan $h$)</td></tr>
+  </table>
+</div>
+
+<!-- ==================== 8. TEMBERENG ==================== -->
+<div class="card">
+  <span class="badge">3D — extends Bola</span>
+  <h2>8. Tembereng Bola (Spherical Cap)</h2>
+  <p class="desc">Potongan bola oleh bidang datar — bagian "topi" dari bola.</p>
+  <div class="formula-row">
+    <div class="formula-label">Jari-jari Alas Tembereng</div>
+    <div class="formula-math">$a = \sqrt{h(2r - h)}$</div>
+  </div>
+  <div class="grid2">
+    <div class="formula-row">
+      <div class="formula-label">Luas Selimut</div>
+      <div class="formula-math">$L_{selimut} = 2 \pi r h$</div>
+    </div>
+    <div class="formula-row">
+      <div class="formula-label">Luas Alas</div>
+      <div class="formula-math">$L_{alas} = \pi a^2$</div>
+    </div>
+  </div>
+  <div class="formula-row" style="margin-top:10px">
+    <div class="formula-label">Luas Permukaan Total</div>
+    <div class="formula-math">$L_{total} = 2\pi r h + \pi a^2$</div>
+  </div>
+  <div class="grid2">
+    <div class="formula-row">
+      <div class="formula-label">Keliling Alas</div>
+      <div class="formula-math">$K = 2 \pi a$</div>
+    </div>
+    <div class="formula-row">
+      <div class="formula-label">Volume</div>
+      <div class="formula-math">$V = \dfrac{\pi h^2}{3} (3r - h)$</div>
+    </div>
+  </div>
+  <table class="var-table">
+    <tr><th>Variabel</th><th>Keterangan</th></tr>
+    <tr><td>$r$</td><td>Jari-jari bola</td></tr>
+    <tr><td>$h$</td><td>Tinggi tembereng (cap height)</td></tr>
+    <tr><td>$a$</td><td>Jari-jari alas tembereng (dihitung dari $r$ dan $h$)</td></tr>
+  </table>
+</div>
+
+<div style="text-align:center; margin-top:30px; padding:16px; font-size:12px; color:#6a6a8a;">
+  Projek Akhir PBO 2 — Simulasi Hitung Benda Geometri Elips &bull; Dibuat Otomatis dari Source Code
+</div>
+
+</body>
+</html>
