@@ -9,58 +9,61 @@ package pElips.model;
  * @author LENOVO
  */
 public class Elips extends BendaGeometri implements KalkulasiGeometri {
-    
-    // Protected agar bisa diakses langsung oleh class benda 3D berbasis elips (Bola, Kerucut, dll..)
+    // Encapsulation: menggunakan protected agar bisa diwariskan ke benda 3D (seperti Bola/Spheroid)
     protected double sumbuA;
     protected double sumbuB;
-    
+
+    /**
+     * Pilar: OVERLOADING (Constructor 1)
+     * Constructor default jika sumbu belum diketahui.
+     */
+    public Elips(String nama) {
+        super(nama);
+        this.sumbuA = 0;
+        this.sumbuB = 0;
+    }
+
+    /**
+     * Pilar: OVERLOADING (Constructor 2)
+     * Constructor lengkap dengan parameter.
+     */
     public Elips(String nama, double a, double b) {
         super(nama);
         this.sumbuA = a;
         this.sumbuB = b;
     }
+
+    // --- Implementasi Pilar ENCAPSULATION (Getter & Setter) ---
+    public double getSumbuA() { return sumbuA; }
+    public void setSumbuA(double a) { this.sumbuA = a; }
+    public double getSumbuB() { return sumbuB; }
+    public void setSumbuB(double b) { this.sumbuB = b; }
+
+    // --- Implementasi Pilar OVERRIDING & POLYMORPHISM ---
     
-    // Implementasi Pilar Encapsulation
-    public double getSumbuA() {
-        return sumbuA;
-    }
-    
-    public void setSumbuA(double sumbuA) {
-        this.sumbuA = sumbuA;
-    }
-    
-    public double sumbuB() {
-        return sumbuB;
-    }
-    
-    public void setSumbuB(double sumbuB) {
-        this.sumbuB = sumbuB;
-    }
-    
-    // Implementasi Pilar Override & Kalkulasi
     @Override
     public double hitungLuas() {
         return Math.PI * sumbuA * sumbuB;
     }
-    
+
     @Override
     public double hitungKeliling() {
+        // Menggunakan rumus pendekatan Ramanujan (lebih akademis)
         return Math.PI * (3 * (sumbuA + sumbuB) - Math.sqrt((3 * sumbuA + sumbuB) * (sumbuA + 3 * sumbuB)));
     }
-    
+
     @Override
     public double hitungVolume() {
-        
-        // Elips adalah benda 2D, jadi volumenya nol
+        // Elips adalah benda 2D, volumenya selalu 0
         return 0.0;
     }
-    
+
     @Override
     public void cetakInfo() {
         System.out.println("--- Data Geometri: " + getNamaBenda() + " ---");
-        System.out.println("Sumbu A (Mayor) : " + sumbuA);
-        System.out.println("Sumbu B (Minor) : " + sumbuB);
-        System.out.println("Luas            : " + String.format("%.2f", hitungLuas()));
-        System.out.println("Keliling        : " + String.format("%.2f", hitungKeliling()));
+        System.out.println("Sumbu Semi-Mayor (A) : " + sumbuA);
+        System.out.println("Sumbu Semi-Minor (B) : " + sumbuB);
+        System.out.println("Luas                 : " + String.format("%.2f", hitungLuas()));
+        System.out.println("Keliling             : " + String.format("%.2f", hitungKeliling()));
     }
 }
