@@ -5,24 +5,29 @@
 package pElips.model;
 
 /**
+ * Class KalkulasiThread - Menjalankan kalkulasi geometri dalam thread terpisah.
+ * 
+ * Pilar: MULTITHREADING
+ * Menggunakan Thread untuk simulasi proses kalkulasi secara paralel.
+ * Menerima semua subclass BendaGeometri (Polymorphism).
  *
  * @author LENOVO
  */
 public class KalkulasiThread extends Thread {
-    private Elips objekElips;
+    private BendaGeometri objekGeometri;
 
-    public KalkulasiThread(Elips e) {
-        this.objekElips = e;
+    public KalkulasiThread(BendaGeometri bg) {
+        this.objekGeometri = bg;
     }
 
     @Override
     public void run() {
         try {
-            System.out.println("\n[System] Memulai kalkulasi thread untuk: " + objekElips.getNamaBenda());
+            System.out.println("\n[Thread] Memulai kalkulasi untuk: " + objekGeometri.getNamaBenda());
             // Simulasi proses delay selama 1.5 detik
             Thread.sleep(1500); 
-            objekElips.cetakInfo();
-            System.out.println("[System] Kalkulasi selesai.\n");
+            objekGeometri.cetakInfo();
+            System.out.println("[Thread] Kalkulasi selesai untuk: " + objekGeometri.getNamaBenda() + "\n");
         } catch (InterruptedException ex) {
             System.err.println("Thread terganggu: " + ex.getMessage());
         }
