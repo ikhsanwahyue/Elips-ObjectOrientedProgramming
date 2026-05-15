@@ -1,27 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package pElips.proses;
 
 import pElips.model.*;
 import java.util.Scanner;
 import java.util.ArrayList;
 
-/**
- * Class SimulasiHitung - Main class untuk menjalankan semua simulasi
- * perhitungan
- * benda geometri berbasis Elips secara dinamis dengan input dari user.
- * 
- * Mendemonstrasikan 5 Pilar PBO:
- * 1. Encapsulation - penggunaan getter/setter
- * 2. Inheritance - hierarki class geometri
- * 3. Overloading - constructor dengan parameter berbeda
- * 4. Overriding & Polymorphism - method yang di-override di setiap subclass
- * 5. Multithreading - penggunaan KalkulasiThread
- *
- * @author LENOVO
- */
 public class SimulasiHitung {
 
     private static Scanner scanner = new Scanner(System.in);
@@ -127,8 +109,6 @@ public class SimulasiHitung {
         }
     }
 
-    // ========== INPUT METHODS ==========
-
     private static Elips inputElips() {
         System.out.println("\n--- Input Data Elips ---");
         System.out.print("Masukkan Sumbu Semi-Mayor (a): ");
@@ -210,8 +190,6 @@ public class SimulasiHitung {
         return new Tembereng("Tembereng Bola", r, h);
     }
 
-    // ========== FITUR DEMO ==========
-
     private static void lihatSemuaBenda() {
         if (daftarBenda.isEmpty()) {
             System.out.println("\n[!] Belum ada benda geometri. Silakan buat benda terlebih dahulu (menu 1).");
@@ -268,7 +246,6 @@ public class SimulasiHitung {
             t.start();
         }
 
-        // Menunggu semua thread selesai
         for (KalkulasiThread t : threads) {
             try {
                 t.join();
@@ -281,8 +258,6 @@ public class SimulasiHitung {
         System.out.println("║     SEMUA THREAD SELESAI DIJALANKAN!            ║");
         System.out.println("╚══════════════════════════════════════════════════╝");
     }
-
-    // ========== UTILITY METHODS ==========
 
     private static double bacaDouble() {
         while (true) {

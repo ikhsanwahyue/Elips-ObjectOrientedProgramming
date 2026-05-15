@@ -7,15 +7,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
 
-/**
- * GUI utama untuk Simulasi Hitung Benda Geometri Elips.
- * Menggunakan Java Swing dengan desain modern dark theme.
- * 
- * @author LENOVO
- */
 public class GeometriGUI extends JFrame {
 
-    // Warna tema
     private static final Color BG_DARK = new Color(18, 18, 30);
     private static final Color BG_CARD = new Color(30, 30, 50);
     private static final Color BG_INPUT = new Color(40, 40, 65);
@@ -27,7 +20,6 @@ public class GeometriGUI extends JFrame {
     private static final Color SUCCESS_GREEN = new Color(50, 205, 100);
     private static final Color BORDER_COLOR = new Color(60, 60, 90);
 
-    // Komponen
     private JComboBox<String> comboBenda;
     private JPanel panelInput;
     private JPanel panelHasil;
@@ -37,7 +29,6 @@ public class GeometriGUI extends JFrame {
     private JLabel lblNamaBenda;
     private JButton btnHitung, btnReset;
 
-    // Daftar benda
     private final String[] daftarBenda = {
         "Pilih Benda Geometri...",
         "Elips",
@@ -57,7 +48,6 @@ public class GeometriGUI extends JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
 
-        // Main panel
         JPanel mainPanel = new JPanel(new BorderLayout(0, 0)) {
             @Override
             protected void paintComponent(Graphics g) {
@@ -72,10 +62,8 @@ public class GeometriGUI extends JFrame {
         mainPanel.setBorder(new EmptyBorder(0, 0, 0, 0));
         setContentPane(mainPanel);
 
-        // Header
         mainPanel.add(createHeader(), BorderLayout.NORTH);
 
-        // Content
         JPanel contentPanel = new JPanel(new GridBagLayout());
         contentPanel.setOpaque(false);
         contentPanel.setBorder(new EmptyBorder(15, 25, 20, 25));
@@ -84,11 +72,9 @@ public class GeometriGUI extends JFrame {
         gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(0, 8, 0, 8);
 
-        // Left: Input
         gbc.gridx = 0; gbc.gridy = 0; gbc.weightx = 0.5; gbc.weighty = 1.0;
         contentPanel.add(createInputPanel(), gbc);
 
-        // Right: Hasil
         gbc.gridx = 1;
         contentPanel.add(createHasilPanel(), gbc);
 
@@ -110,7 +96,7 @@ public class GeometriGUI extends JFrame {
         header.setPreferredSize(new Dimension(0, 70));
         header.setBorder(new EmptyBorder(12, 25, 12, 25));
 
-        JLabel title = new JLabel("◆  Simulasi Hitung Benda Geometri Elips");
+        JLabel title = new JLabel("Simulasi Hitung Benda Geometri Elips");
         title.setFont(new Font("Segoe UI", Font.BOLD, 22));
         title.setForeground(Color.WHITE);
         header.add(title, BorderLayout.WEST);
@@ -131,7 +117,6 @@ public class GeometriGUI extends JFrame {
         inner.setLayout(new BoxLayout(inner, BoxLayout.Y_AXIS));
         inner.setOpaque(false);
 
-        // Combo benda
         JPanel comboPanel = new JPanel(new BorderLayout(0, 6));
         comboPanel.setOpaque(false);
         comboPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
@@ -149,7 +134,6 @@ public class GeometriGUI extends JFrame {
         inner.add(comboPanel);
         inner.add(Box.createVerticalStrut(12));
 
-        // Input fields panel
         panelInput = new JPanel();
         panelInput.setLayout(new BoxLayout(panelInput, BoxLayout.Y_AXIS));
         panelInput.setOpaque(false);
@@ -184,7 +168,6 @@ public class GeometriGUI extends JFrame {
         inner.add(panelInput);
         inner.add(Box.createVerticalGlue());
 
-        // Buttons
         JPanel btnPanel = new JPanel(new GridLayout(1, 2, 12, 0));
         btnPanel.setOpaque(false);
         btnPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
@@ -203,13 +186,12 @@ public class GeometriGUI extends JFrame {
     }
 
     private JPanel createHasilPanel() {
-        JPanel card = createCard("◈  Hasil Perhitungan");
+        JPanel card = createCard("Hasil Perhitungan");
 
         JPanel inner = new JPanel();
         inner.setLayout(new BoxLayout(inner, BoxLayout.Y_AXIS));
         inner.setOpaque(false);
 
-        // Nama benda
         lblNamaBenda = new JLabel("Belum ada benda dipilih");
         lblNamaBenda.setFont(new Font("Segoe UI", Font.BOLD, 16));
         lblNamaBenda.setForeground(ACCENT_CYAN);
@@ -217,14 +199,12 @@ public class GeometriGUI extends JFrame {
         inner.add(lblNamaBenda);
         inner.add(Box.createVerticalStrut(6));
 
-        // Separator
         JSeparator sep = new JSeparator();
         sep.setForeground(BORDER_COLOR);
         sep.setMaximumSize(new Dimension(Integer.MAX_VALUE, 2));
         inner.add(sep);
         inner.add(Box.createVerticalStrut(18));
 
-        // Hasil panel
         panelHasil = new JPanel();
         panelHasil.setLayout(new BoxLayout(panelHasil, BoxLayout.Y_AXIS));
         panelHasil.setOpaque(false);
@@ -367,7 +347,6 @@ public class GeometriGUI extends JFrame {
 
     private void updateInputFields() {
         int idx = comboBenda.getSelectedIndex();
-        // Hide all
         for (int i = 0; i < 6; i++) {
             inputLabels[i].setVisible(false);
             inputFields[i].setVisible(false);
@@ -375,38 +354,38 @@ public class GeometriGUI extends JFrame {
         }
 
         switch (idx) {
-            case 1: // Elips
+            case 1:
                 showField(0, "Sumbu Semi-Mayor (a):");
                 showField(1, "Sumbu Semi-Minor (b):");
                 break;
-            case 2: // Bola
+            case 2:
                 showField(0, "Jari-jari (r):");
                 break;
-            case 3: // Tabung
+            case 3:
                 showField(0, "Jari-jari (r):");
                 showField(1, "Tinggi (t):");
                 break;
-            case 4: // Kerucut Alas Elips
+            case 4:
                 showField(0, "Sumbu Semi-Mayor (a):");
                 showField(1, "Sumbu Semi-Minor (b):");
                 showField(2, "Tinggi (t):");
                 break;
-            case 5: // Kerucut Terpancung
+            case 5:
                 showField(0, "Sumbu A Bawah (a1):");
                 showField(1, "Sumbu B Bawah (b1):");
                 showField(2, "Sumbu A Atas (a2):");
                 showField(3, "Sumbu B Atas (b2):");
                 showField(4, "Tinggi (t):");
                 break;
-            case 6: // Cincin
+            case 6:
                 showField(0, "Jari-jari Mayor / R (pusat torus ke pusat tabung):");
                 showField(1, "Jari-jari Minor / r (radius tabung):");
                 break;
-            case 7: // Juring
+            case 7:
                 showField(0, "Jari-jari Bola (r):");
                 showField(1, "Tinggi Topi (h):");
                 break;
-            case 8: // Tembereng
+            case 8:
                 showField(0, "Jari-jari Bola (r):");
                 showField(1, "Tinggi Topi (h):");
                 break;
@@ -434,7 +413,7 @@ public class GeometriGUI extends JFrame {
             String nama = "";
 
             switch (idx) {
-                case 1: { // Elips
+                case 1: {
                     double a = Double.parseDouble(inputFields[0].getText());
                     double b = Double.parseDouble(inputFields[1].getText());
                     Elips e = new Elips("Elips", a, b);
@@ -442,14 +421,14 @@ public class GeometriGUI extends JFrame {
                     nama = "Elips";
                     break;
                 }
-                case 2: { // Bola
+                case 2: {
                     double r = Double.parseDouble(inputFields[0].getText());
                     Bola b = new Bola("Bola", r);
                     luas = b.hitungLuas(); keliling = b.hitungKeliling(); volume = b.hitungVolume();
                     nama = "Bola";
                     break;
                 }
-                case 3: { // Tabung
+                case 3: {
                     double r = Double.parseDouble(inputFields[0].getText());
                     double t = Double.parseDouble(inputFields[1].getText());
                     Tabung tb = new Tabung();
@@ -458,7 +437,7 @@ public class GeometriGUI extends JFrame {
                     nama = "Tabung";
                     break;
                 }
-                case 4: { // Kerucut Alas Elips
+                case 4: {
                     double a = Double.parseDouble(inputFields[0].getText());
                     double b = Double.parseDouble(inputFields[1].getText());
                     double t = Double.parseDouble(inputFields[2].getText());
@@ -467,7 +446,7 @@ public class GeometriGUI extends JFrame {
                     nama = "Kerucut Dengan Alas Elips";
                     break;
                 }
-                case 5: { // Kerucut Terpancung
+                case 5: {
                     double a1 = Double.parseDouble(inputFields[0].getText());
                     double b1 = Double.parseDouble(inputFields[1].getText());
                     double a2 = Double.parseDouble(inputFields[2].getText());
@@ -479,7 +458,7 @@ public class GeometriGUI extends JFrame {
                     nama = "Kerucut Terpancung Alas Elips";
                     break;
                 }
-                case 6: { // Cincin
+                case 6: {
                     double R = Double.parseDouble(inputFields[0].getText());
                     double r = Double.parseDouble(inputFields[1].getText());
                     Cincin c = new Cincin("Cincin (Torus)", R, r);
@@ -487,7 +466,7 @@ public class GeometriGUI extends JFrame {
                     nama = "Cincin Elips (Torus)";
                     break;
                 }
-                case 7: { // Juring
+                case 7: {
                     double r = Double.parseDouble(inputFields[0].getText());
                     double h = Double.parseDouble(inputFields[1].getText());
                     Juring j = new Juring("Juring Bola", r, h);
@@ -495,7 +474,7 @@ public class GeometriGUI extends JFrame {
                     nama = "Juring Bola";
                     break;
                 }
-                case 8: { // Tembereng
+                case 8: {
                     double r = Double.parseDouble(inputFields[0].getText());
                     double h = Double.parseDouble(inputFields[1].getText());
                     Tembereng t = new Tembereng("Tembereng Bola", r, h);
