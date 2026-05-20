@@ -1,38 +1,26 @@
 package pElips.model;
 
-public class Bola extends BendaGeometri implements KalkulasiGeometri {
+public class Bola extends BendaGeometri {
     protected double jariJari;
-
-    public Bola() {
-        super("Bola");
-    }
 
     public Bola(String nama, double r) {
         super(nama);
         this.jariJari = r;
     }
 
-    public double getJariJari() {
-        return jariJari;
-    }
-
-    public void setJariJari(double r) {
-        this.jariJari = r;
-    }
-
     @Override
     public double hitungLuas() {
-        return 4 * Math.PI * Math.pow(jariJari, 2);
+        return 4 * PI * pangkat(jariJari, 2);
     }
 
     @Override
     public double hitungKeliling() {
-        return 2 * Math.PI * jariJari;
+        return 2 * PI * jariJari;
     }
 
     @Override
     public double hitungVolume() {
-        return (4.0 / 3.0) * Math.PI * Math.pow(jariJari, 3);
+        return (4.0 / 3.0) * PI * pangkat(jariJari, 3);
     }
 
     @Override
@@ -40,7 +28,8 @@ public class Bola extends BendaGeometri implements KalkulasiGeometri {
         System.out.println("--- Data Geometri: " + getNamaBenda() + " ---");
         System.out.println("Jari-jari (r)        : " + jariJari);
         System.out.println("Luas Permukaan       : " + String.format("%.2f", hitungLuas()));
-        System.out.println("Keliling             : " + String.format("%.2f", hitungKeliling()));
         System.out.println("Volume               : " + String.format("%.2f", hitungVolume()));
     }
+
+    public double getJariJari() { return jariJari; }
 }

@@ -1,7 +1,6 @@
 package pElips.model;
 
-public class Elips extends BendaGeometri implements KalkulasiGeometri {
-    
+public class Elips extends BendaGeometri {
     protected double sumbuA;
     protected double sumbuB;
 
@@ -17,20 +16,14 @@ public class Elips extends BendaGeometri implements KalkulasiGeometri {
         this.sumbuB = b;
     }
 
-    public double getSumbuA() { return sumbuA; }
-    public void setSumbuA(double a) { this.sumbuA = a; }
-    
-    public double getSumbuB() { return sumbuB; }
-    public void setSumbuB(double b) { this.sumbuB = b; }
-
     @Override
     public double hitungLuas() {
-        return Math.PI * sumbuA * sumbuB;
+        return PI * sumbuA * sumbuB;
     }
 
     @Override
     public double hitungKeliling() {
-        return Math.PI * (3 * (sumbuA + sumbuB) - Math.sqrt((3 * sumbuA + sumbuB) * (sumbuA + 3 * sumbuB)));
+        return PI * (3 * (sumbuA + sumbuB) - akarKuadrat((3 * sumbuA + sumbuB) * (sumbuA + 3 * sumbuB)));
     }
 
     @Override
@@ -46,4 +39,9 @@ public class Elips extends BendaGeometri implements KalkulasiGeometri {
         System.out.println("Luas                 : " + String.format("%.2f", hitungLuas()));
         System.out.println("Keliling             : " + String.format("%.2f", hitungKeliling()));
     }
+
+    public double getSumbuA() { return sumbuA; }
+    public void setSumbuA(double a) { this.sumbuA = a; }
+    public double getSumbuB() { return sumbuB; }
+    public void setSumbuB(double b) { this.sumbuB = b; }
 }

@@ -1,262 +1,186 @@
 package pElips.proses;
 
 import pElips.model.*;
-import java.util.Scanner;
+import pElips.thread.KalkulasiThread;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.Random;
 
 public class SimulasiHitung {
-
     private static Scanner scanner = new Scanner(System.in);
     private static ArrayList<BendaGeometri> daftarBenda = new ArrayList<>();
 
     public static void main(String[] args) {
         boolean running = true;
-
         while (running) {
             tampilkanMenu();
             System.out.print("Pilih menu [1-5]: ");
             int pilihan = bacaInt();
-
+            
             switch (pilihan) {
-                case 1:
-                    buatBendaGeometri();
-                    break;
-                case 2:
-                    lihatSemuaBenda();
-                    break;
-                case 3:
-                    demoPolymorphism();
-                    break;
-                case 4:
-                    demoMultithreading();
-                    break;
+                case 1: buatBendaGeometri(); break;
+                case 2: lihatSemuaBenda(); break;
+                case 3: demoPolymorphism(); break;
+                case 4: demoMultithreading(); break;
                 case 5:
                     running = false;
-                    System.out.println("\n╔══════════════════════════════════════════════════╗");
-                    System.out.println("║   Terima kasih telah menggunakan program ini!   ║");
-                    System.out.println("╚══════════════════════════════════════════════════╝");
+                    System.out.println("\n|| Terima kasih telah menggunakan program ini! ||");
                     break;
                 default:
-                    System.out.println("[!] Pilihan tidak valid. Silakan coba lagi.\n");
+                    System.out.println("[!] Pilihan tidak valid.\n");
             }
         }
         scanner.close();
     }
 
     private static void tampilkanMenu() {
-        System.out.println("\n╔══════════════════════════════════════════════════╗");
-        System.out.println("║     SIMULASI HITUNG BENDA GEOMETRI ELIPS       ║");
-        System.out.println("║         Projek Akhir - PBO 2                   ║");
-        System.out.println("╠══════════════════════════════════════════════════╣");
-        System.out.println("║  [1] Buat Benda Geometri Baru                  ║");
-        System.out.println("║  [2] Lihat Semua Benda & Hasil Perhitungan     ║");
-        System.out.println("║  [3] Demonstrasi Polymorphism                  ║");
-        System.out.println("║  [4] Demonstrasi Multithreading                ║");
-        System.out.println("║  [5] Keluar                                    ║");
-        System.out.println("╚══════════════════════════════════════════════════╝");
+        System.out.println("\n=======================================================");
+        System.out.println(" || SIMULASI HITUNG BENDA GEOMETRI ELIPS & BOLA || ");
+        System.out.println(" || Projek Akhir - Tugas Kelompok PBO               || ");
+        System.out.println("=======================================================");
+        System.out.println(" [1] Buat Benda Geometri Baru (Manual)");
+        System.out.println(" [2] Lihat Semua Benda & Hasil Perhitungan");
+        System.out.println(" [3] Demonstrasi Polimorfisme Murni");
+        System.out.println(" [4] DEMONSTRASI MULTITHREADING (100.000 DATA)");
+        System.out.println(" [5] Keluar");
+        System.out.println("=======================================================");
     }
 
     private static void buatBendaGeometri() {
         System.out.println("\n--- Pilih Jenis Benda Geometri ---");
-        System.out.println("[1] Elips (2D)");
-        System.out.println("[2] Bola");
-        System.out.println("[3] Tabung");
-        System.out.println("[4] Kerucut Dengan Alas Elips");
-        System.out.println("[5] Kerucut Terpancung Dengan Alas Elips");
-        System.out.println("[6] Cincin (Torus)");
-        System.out.println("[7] Juring Bola");
-        System.out.println("[8] Tembereng Bola");
+        System.out.println("[1] Elips (2D)\n[2] Bola\n[3] Tabung\n[4] Kerucut Alas Elips");
+        System.out.println("[5] Kerucut Terpancung Alas Elips\n[6] Cincin\n[7] Juring Bola\n[8] Tembereng Bola");
         System.out.print("Pilih [1-8]: ");
         int jenis = bacaInt();
-
         BendaGeometri benda = null;
-
+        
         switch (jenis) {
             case 1:
-                benda = inputElips();
+                System.out.print("Sumbu a & b (pisahkan dengan enter): ");
+                benda = new Elips("Elips Manual", bacaDouble(), bacaDouble());
                 break;
             case 2:
-                benda = inputBola();
+                System.out.print("Jari-jari: ");
+                benda = new Bola("Bola Manual", bacaDouble());
                 break;
             case 3:
-                benda = inputTabung();
+                System.out.print("Sumbu a, b, & tinggi (pisahkan dengan enter): ");
+                benda = new Tabung("Tabung Alas Elips Manual", bacaDouble(), bacaDouble(), bacaDouble());
                 break;
             case 4:
-                benda = inputKerucut();
+                System.out.print("Sumbu a, b, & tinggi (pisahkan dengan enter): ");
+                benda = new KerucutDenganAlasElips("Kerucut Alas Elips Manual", bacaDouble(), bacaDouble(), bacaDouble());
                 break;
             case 5:
-                benda = inputKerucutTerpancung();
+                System.out.print("Sumbu a1, b1, a2, b2, & tinggi (pisahkan dengan enter): ");
+                benda = new KerucutTerpancungDenganAlasElips("Kerucut Terpancung Manual", bacaDouble(), bacaDouble(), bacaDouble(), bacaDouble(), bacaDouble());
                 break;
             case 6:
-                benda = inputCincin();
+                System.out.print("R Mayor & r Minor (pisahkan dengan enter): ");
+                benda = new Cincin("Cincin Bola Manual", bacaDouble(), bacaDouble());
                 break;
             case 7:
-                benda = inputJuring();
+                System.out.print("Jari-jari & tinggi topi (pisahkan dengan enter): ");
+                benda = new Juring("Juring Bola Manual", bacaDouble(), bacaDouble());
                 break;
             case 8:
-                benda = inputTembereng();
+                System.out.print("Jari-jari & tinggi topi (pisahkan dengan enter): ");
+                benda = new Tembereng("Tembereng Bola Manual", bacaDouble(), bacaDouble());
                 break;
             default:
                 System.out.println("[!] Pilihan tidak valid.");
                 return;
         }
-
-        if (benda != null) {
-            daftarBenda.add(benda);
-            System.out.println("\n[OK] Benda berhasil dibuat! Hasil perhitungan:");
-            System.out.println();
-            benda.cetakInfo();
-        }
-    }
-
-    private static Elips inputElips() {
-        System.out.println("\n--- Input Data Elips ---");
-        System.out.print("Masukkan Sumbu Semi-Mayor (a): ");
-        double a = bacaDouble();
-        System.out.print("Masukkan Sumbu Semi-Minor (b): ");
-        double b = bacaDouble();
-        return new Elips("Elips", a, b);
-    }
-
-    private static Bola inputBola() {
-        System.out.println("\n--- Input Data Bola ---");
-        System.out.print("Masukkan Jari-jari (r): ");
-        double r = bacaDouble();
-        return new Bola("Bola", r);
-    }
-
-    private static Tabung inputTabung() {
-        System.out.println("\n--- Input Data Tabung ---");
-        System.out.print("Masukkan Jari-jari (r): ");
-        double r = bacaDouble();
-        System.out.print("Masukkan Tinggi (t): ");
-        double t = bacaDouble();
-        Tabung tb = new Tabung();
-        tb.setJariJari(r);
-        tb.setTinggi(t);
-        return tb;
-    }
-
-    private static KerucutDenganAlasElips inputKerucut() {
-        System.out.println("\n--- Input Data Kerucut Dengan Alas Elips ---");
-        System.out.print("Masukkan Sumbu Semi-Mayor (a): ");
-        double a = bacaDouble();
-        System.out.print("Masukkan Sumbu Semi-Minor (b): ");
-        double b = bacaDouble();
-        System.out.print("Masukkan Tinggi (t): ");
-        double t = bacaDouble();
-        return new KerucutDenganAlasElips("Kerucut Alas Elips", a, b, t);
-    }
-
-    private static KerucutTerpancungDenganAlasElips inputKerucutTerpancung() {
-        System.out.println("\n--- Input Data Kerucut Terpancung Dengan Alas Elips ---");
-        System.out.print("Masukkan Sumbu A Bawah (a1): ");
-        double a1 = bacaDouble();
-        System.out.print("Masukkan Sumbu B Bawah (b1): ");
-        double b1 = bacaDouble();
-        System.out.print("Masukkan Sumbu A Atas  (a2): ");
-        double a2 = bacaDouble();
-        System.out.print("Masukkan Sumbu B Atas  (b2): ");
-        double b2 = bacaDouble();
-        System.out.print("Masukkan Tinggi (t): ");
-        double t = bacaDouble();
-        return new KerucutTerpancungDenganAlasElips("Kerucut Terpancung Alas Elips", a1, b1, a2, b2, t);
-    }
-
-    private static Cincin inputCincin() {
-        System.out.println("\n--- Input Data Cincin (Torus) ---");
-        System.out.print("Masukkan Jari-jari Mayor / R (pusat torus ke pusat tabung): ");
-        double R = bacaDouble();
-        System.out.print("Masukkan Jari-jari Minor / r (radius tabung): ");
-        double r = bacaDouble();
-        return new Cincin("Cincin Elips (Torus)", R, r);
-    }
-
-    private static Juring inputJuring() {
-        System.out.println("\n--- Input Data Juring Bola ---");
-        System.out.print("Masukkan Jari-jari Bola (r): ");
-        double r = bacaDouble();
-        System.out.print("Masukkan Tinggi Topi (h): ");
-        double h = bacaDouble();
-        return new Juring("Juring Bola", r, h);
-    }
-
-    private static Tembereng inputTembereng() {
-        System.out.println("\n--- Input Data Tembereng Bola ---");
-        System.out.print("Masukkan Jari-jari Bola (r): ");
-        double r = bacaDouble();
-        System.out.print("Masukkan Tinggi Topi (h): ");
-        double h = bacaDouble();
-        return new Tembereng("Tembereng Bola", r, h);
+        
+        daftarBenda.add(benda);
+        System.out.println("\n[OK] Berhasil dibuat!");
+        benda.cetakInfo();
     }
 
     private static void lihatSemuaBenda() {
         if (daftarBenda.isEmpty()) {
-            System.out.println("\n[!] Belum ada benda geometri. Silakan buat benda terlebih dahulu (menu 1).");
+            System.out.println("\n[!] Daftar kosong.");
             return;
         }
-        System.out.println("\n╔══════════════════════════════════════════════════╗");
-        System.out.println("║        DAFTAR SEMUA BENDA GEOMETRI              ║");
-        System.out.println("╚══════════════════════════════════════════════════╝");
-        int no = 1;
-        for (BendaGeometri benda : daftarBenda) {
-            System.out.println("\n[Benda #" + no + "]");
-            benda.cetakInfo();
-            no++;
+        for (int i = 0; i < daftarBenda.size(); i++) {
+            System.out.println("\n[Benda #" + (i + 1) + "]");
+            daftarBenda.get(i).cetakInfo();
         }
     }
 
     private static void demoPolymorphism() {
         if (daftarBenda.isEmpty()) {
-            System.out.println("\n[!] Belum ada benda geometri. Silakan buat benda terlebih dahulu (menu 1).");
+            System.out.println("\n[!] Masukkan data manual terlebih dahulu di menu [1].");
             return;
         }
-        System.out.println("\n╔══════════════════════════════════════════════════╗");
-        System.out.println("║          DEMONSTRASI POLYMORPHISM               ║");
-        System.out.println("╚══════════════════════════════════════════════════╝\n");
-        System.out.println("Menggunakan array BendaGeometri[] untuk memanggil");
-        System.out.println("method yang sama pada objek berbeda (Polymorphism):\n");
-
+        System.out.println("\n--- DEMONSTRASI POLIMORFISME MURNI ---");
         for (BendaGeometri benda : daftarBenda) {
-            if (benda instanceof KalkulasiGeometri) {
-                KalkulasiGeometri kg = (KalkulasiGeometri) benda;
-                System.out.println("[" + benda.getNamaBenda() + "]");
-                System.out.println("  Luas     = " + String.format("%.2f", kg.hitungLuas()));
-                System.out.println("  Keliling = " + String.format("%.2f", kg.hitungKeliling()));
-                System.out.println("  Volume   = " + String.format("%.2f", kg.hitungVolume()));
-                System.out.println();
-            }
+            System.out.println("Nama Objek : " + benda.getNamaBenda());
+            System.out.println("-> Luas    : " + String.format("%.2f", benda.hitungLuas()));
+            System.out.println("-> Volume  : " + String.format("%.2f", benda.hitungVolume()));
+            System.out.println("----------------------------------------");
         }
     }
 
     private static void demoMultithreading() {
-        if (daftarBenda.isEmpty()) {
-            System.out.println("\n[!] Belum ada benda geometri. Silakan buat benda terlebih dahulu (menu 1).");
-            return;
-        }
-        System.out.println("\n╔══════════════════════════════════════════════════╗");
-        System.out.println("║          DEMONSTRASI MULTITHREADING             ║");
-        System.out.println("╚══════════════════════════════════════════════════╝\n");
-        System.out.println("Menjalankan kalkulasi setiap benda di thread terpisah...\n");
+        int jumlahData = 100000;
+        System.out.println("\n--- DEMONSTRASI MULTITHREADING DENGAN " + jumlahData + " DATA ---");
+        System.out.println("Membuat " + jumlahData + " data geometri otomatis di memory...");
+        List<BendaGeometri> dataMassal = new ArrayList<>();
+        Random rand = new Random();
 
-        ArrayList<KalkulasiThread> threads = new ArrayList<>();
-        for (BendaGeometri benda : daftarBenda) {
-            KalkulasiThread t = new KalkulasiThread(benda);
-            threads.add(t);
-            t.start();
+        for (int i = 0; i < jumlahData; i++) {
+            int tipe = rand.nextInt(4);
+            double val1 = 10 + rand.nextDouble() * 50;
+            double val2 = 5 + rand.nextDouble() * 30;
+            
+            if (tipe == 0) dataMassal.add(new Bola("Bulk-Bola-" + i, val1));
+            else if (tipe == 1) dataMassal.add(new Tabung("Bulk-Tabung-" + i, val1, val2, val1));
+            else if (tipe == 2) dataMassal.add(new Juring("Bulk-Juring-" + i, val1, val2));
+            else dataMassal.add(new KerucutDenganAlasElips("Bulk-Kerucut-" + i, val1, val2, val1));
+        }
+
+        long startSequential = System.currentTimeMillis();
+        for (BendaGeometri bg : dataMassal) {
+            for (int i = 0; i < 50; i++) { 
+                bg.hitungVolume();
+                bg.hitungLuas();
+            }
+        }
+        long endSequential = System.currentTimeMillis();
+        long waktuSequential = endSequential - startSequential;
+        System.out.println("\n[1] Waktu eksekusi SINGLE THREAD (Sequential): " + waktuSequential + " ms");
+
+        int jumlahThread = 4;
+        int chunkSize = jumlahData / jumlahThread;
+        List<KalkulasiThread> threads = new ArrayList<>();
+        
+        long startParallel = System.currentTimeMillis();
+        for (int i = 0; i < jumlahThread; i++) {
+            int fromIndex = i * chunkSize;
+            int toIndex = (i == jumlahThread - 1) ? jumlahData : (i + 1) * chunkSize;
+            List<BendaGeometri> subList = dataMassal.subList(fromIndex, toIndex);
+            
+            KalkulasiThread thread = new KalkulasiThread(i + 1, subList);
+            threads.add(thread);
+            thread.start();
         }
 
         for (KalkulasiThread t : threads) {
             try {
                 t.join();
             } catch (InterruptedException e) {
-                System.err.println("Thread utama terganggu: " + e.getMessage());
+                System.out.println("Thread Utama Terganggu.");
             }
         }
+        long endParallel = System.currentTimeMillis();
+        long waktuParallel = endParallel - startParallel;
 
-        System.out.println("╔══════════════════════════════════════════════════╗");
-        System.out.println("║     SEMUA THREAD SELESAI DIJALANKAN!            ║");
-        System.out.println("╚══════════════════════════════════════════════════╝");
+        System.out.println("[2] Waktu eksekusi MULTITHREADING (" + jumlahThread + " Threads): " + waktuParallel + " ms");
+        if (waktuParallel > 0) {
+            System.out.println("\nKESIMPULAN: Multithreading lebih cepat " + String.format("%.2f", (double) waktuSequential / waktuParallel) + "x lipat!");
+        }
     }
 
     private static double bacaDouble() {
@@ -264,7 +188,7 @@ public class SimulasiHitung {
             try {
                 return Double.parseDouble(scanner.nextLine().trim());
             } catch (NumberFormatException e) {
-                System.out.print("[!] Input tidak valid. Masukkan angka: ");
+                System.out.print("[!] Input angka tidak valid, masukkan ulang: ");
             }
         }
     }
@@ -274,7 +198,7 @@ public class SimulasiHitung {
             try {
                 return Integer.parseInt(scanner.nextLine().trim());
             } catch (NumberFormatException e) {
-                System.out.print("[!] Input tidak valid. Masukkan angka: ");
+                System.out.print("[!] Input angka tidak valid, masukkan ulang: ");
             }
         }
     }

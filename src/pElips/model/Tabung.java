@@ -1,43 +1,29 @@
 package pElips.model;
 
-public class Tabung extends BendaGeometri implements KalkulasiGeometri {
-    private double jariJari;
+public class Tabung extends Elips {
     private double tinggi;
 
-    public Tabung() {
-        super("Tabung");
-        setNamaBenda("Tabung");
-    }
-
-    public void setJariJari(double r) {
-        this.jariJari = r;
-    }
-
-    public void setTinggi(double t) {
-        this.tinggi = t;
+    public Tabung(String nama, double a, double b, double tinggi) {
+        super(nama, a, b);
+        this.tinggi = tinggi;
     }
 
     @Override
     public double hitungLuas() {
-        return 2 * Math.PI * jariJari * (jariJari + tinggi);
-    }
-
-    @Override
-    public double hitungKeliling() {
-        return 2 * Math.PI * jariJari;
+        double luasAlas = super.hitungLuas();
+        double kelilingAlas = super.hitungKeliling();
+        return (2 * luasAlas) + (kelilingAlas * tinggi);
     }
 
     @Override
     public double hitungVolume() {
-        return Math.PI * Math.pow(jariJari, 2) * tinggi;
+        return super.hitungLuas() * tinggi;
     }
 
     @Override
     public void cetakInfo() {
-        System.out.println("Nama Benda : " + getNamaBenda());
-        System.out.println("Jari-jari  : " + jariJari);
-        System.out.println("Tinggi     : " + tinggi);
-        System.out.println("Volume     : " + hitungVolume());
-        System.out.println("Luas Perm. : " + hitungLuas());
+        super.cetakInfo();
+        System.out.println("Tinggi Tabung        : " + tinggi);
+        System.out.println("Volume Tabung        : " + String.format("%.2f", hitungVolume()));
     }
 }
