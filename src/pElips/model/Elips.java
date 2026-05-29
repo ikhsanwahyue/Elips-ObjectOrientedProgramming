@@ -5,43 +5,64 @@ public class Elips extends BendaGeometri {
     protected double sumbuB;
 
     public Elips(String nama) {
-        super(nama);
-        this.sumbuA = 0;
-        this.sumbuB = 0;
+        this(nama, 1.0, 1.0);
     }
 
     public Elips(String nama, double a, double b) {
         super(nama);
-        this.sumbuA = a;
-        this.sumbuB = b;
+        setSumbuA(a);
+        setSumbuB(b);
     }
 
     @Override
     public double hitungLuas() {
-        return PI * sumbuA * sumbuB;
+        luas = hitungLuasElips(sumbuA, sumbuB);
+        return luas;
     }
 
     @Override
     public double hitungKeliling() {
-        return PI * (3 * (sumbuA + sumbuB) - akarKuadrat((3 * sumbuA + sumbuB) * (sumbuA + 3 * sumbuB)));
+        keliling = hitungKelilingElips(sumbuA, sumbuB);
+        return keliling;
     }
 
     @Override
     public double hitungVolume() {
-        return 0.0;
+        volume = 0.0;
+        return volume;
     }
 
     @Override
     public void cetakInfo() {
+        hitungSemua();
         System.out.println("--- Data Geometri: " + getNamaBenda() + " ---");
         System.out.println("Sumbu Semi-Mayor (A) : " + sumbuA);
         System.out.println("Sumbu Semi-Minor (B) : " + sumbuB);
-        System.out.println("Luas                 : " + String.format("%.2f", hitungLuas()));
-        System.out.println("Keliling             : " + String.format("%.2f", hitungKeliling()));
+        System.out.println("Luas                 : " + formatAngka(luas));
+        System.out.println("Keliling             : " + formatAngka(keliling));
     }
 
-    public double getSumbuA() { return sumbuA; }
-    public void setSumbuA(double a) { this.sumbuA = a; }
-    public double getSumbuB() { return sumbuB; }
-    public void setSumbuB(double b) { this.sumbuB = b; }
+    protected double hitungLuasElips(double a, double b) {
+        return PI * a * b;
+    }
+
+    protected double hitungKelilingElips(double a, double b) {
+        return PI * (3 * (a + b) - akarKuadrat((3 * a + b) * (a + 3 * b)));
+    }
+
+    public double getSumbuA() {
+        return sumbuA;
+    }
+
+    public void setSumbuA(double a) {
+        this.sumbuA = wajibPositif("Sumbu A", a);
+    }
+
+    public double getSumbuB() {
+        return sumbuB;
+    }
+
+    public void setSumbuB(double b) {
+        this.sumbuB = wajibPositif("Sumbu B", b);
+    }
 }

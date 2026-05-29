@@ -1,19 +1,40 @@
-# Elips - Object-Oriented Programming Theory Project
+# Elips - Object Oriented Programming Project
 
-Proyek ini mendemonstrasikan penerapan 5 Pilar Konsep Object-Oriented sesuai materi perkuliahan:
+Project ini mendemonstrasikan penerapan konsep OOP Java pada benda geometri:
 
-### 1. Encapsulation & Information Hiding
-Menerapkan akses modifier `private` pada atribut class dan menyediakan `public getter/setter` untuk keamanan data.
+- `Elips` sebagai benda 2D.
+- `KerucutDenganAlasElips` dan `KerucutTerpancungDenganAlasElips` sebagai turunan dari `Elips`.
+- `Bola` sebagai parent untuk `Juring`, `Tembereng`, `Cincin`, dan `Tabung`.
+- `BendaGeometri` sebagai abstract class utama yang `implements Runnable`.
 
-### 2. Inheritance (Pewarisan)
-Menggunakan keyword `extends` untuk mewariskan sifat dari class induk ke class anak di dalam sistem Elips.
+## Struktur Utama
 
-### 3. Overloading
-Implementasi method dengan nama yang sama namun memiliki parameter yang berbeda (Compile-time polymorphism).
+- Tidak ada lagi interface kalkulasi terpisah.
+- Tidak ada lagi class thread terpisah.
+- Setiap objek geometri menyimpan atribut hasil seperti `luas`, `keliling`, `volume`, `progress`, dan `statusProses`.
+- Multithreading menjalankan objek geometri langsung melalui method `run()` dari `BendaGeometri`.
+- Entry point project adalah `pElips.Main`, yang membuka GUI utama `pElips.gui.MainFrame`.
 
-### 4. Overriding & Polymorphism
-Menerapkan perubahan perilaku method class induk di class anak dan penggunaan satu interface untuk berbagai bentuk objek.
+## Fitur
 
-### 5. Multithreading
-Mengimplementasikan pengolahan proses secara paralel menggunakan class `Thread` dan interface `Runnable`, termasuk pengelolaan siklus hidup thread (Ready, Running, Dead).
+- Hitung manual untuk semua benda geometri.
+- Validasi input angka positif dan relasi dimensi penting.
+- Demo polymorphism melalui referensi `BendaGeometri`.
+- Demo multithreading 100.000 data per benda geometri, total 800.000 data, dengan tabel dan visualisasi batang berjalan.
 
+## Cara Menjalankan
+
+Di NetBeans, jalankan project langsung karena `main.class` sudah diarahkan ke:
+
+```text
+pElips.Main
+```
+
+Atau compile manual lewat PowerShell:
+
+```powershell
+$out = Join-Path $env:TEMP "elips-oop-compile"
+New-Item -ItemType Directory -Force -Path $out | Out-Null
+javac -encoding UTF-8 -d $out (Get-ChildItem -Recurse -Filter *.java -Path src | ForEach-Object { $_.FullName })
+java -cp $out pElips.Main
+```
