@@ -477,10 +477,10 @@ public class MainFrame extends JFrame {
                 tampilkanField(3);
                 break;
             case 4:
-                lblInput1.setText("Sumbu a1");
-                lblInput2.setText("Sumbu b1");
-                lblInput3.setText("Sumbu a2");
-                lblInput4.setText("Sumbu b2");
+                lblInput1.setText("Sumbu a1 (bawah)");
+                lblInput2.setText("Sumbu b1 (bawah)");
+                lblInput3.setText("Sumbu a2 (atas)");
+                lblInput4.setText("Sumbu b2 (atas)");
                 lblInput5.setText("Tinggi");
                 tampilkanField(5);
                 break;

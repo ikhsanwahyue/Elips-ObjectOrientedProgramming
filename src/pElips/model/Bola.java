@@ -5,10 +5,6 @@ public class Bola extends BendaGeometri {
     protected double diameter;
     protected double kelilingLingkaranBesar;
 
-    public Bola(String nama) {
-        this(nama, 1.0);
-    }
-
     public Bola(String nama, double r) {
         super(nama);
         setJariJari(r);
@@ -16,21 +12,39 @@ public class Bola extends BendaGeometri {
 
     @Override
     public double hitungLuas() {
-        luas = 4 * PI * pangkat(jariJari, 2);
+        luas = hitungLuas(jariJari);
         return luas;
+    }
+
+    public double hitungLuas(double r) {
+        double radius = wajibPositif("Jari-jari", r);
+        luas2 = 4 * PI * radius * radius;
+        return luas2;
     }
 
     @Override
     public double hitungKeliling() {
-        kelilingLingkaranBesar = 2 * PI * jariJari;
+        kelilingLingkaranBesar = hitungKeliling(jariJari);
         keliling = kelilingLingkaranBesar;
         return keliling;
     }
 
+    public double hitungKeliling(double r) {
+        double radius = wajibPositif("Jari-jari", r);
+        keliling2 = 2 * PI * radius;
+        return keliling2;
+    }
+
     @Override
     public double hitungVolume() {
-        volume = (4.0 / 3.0) * PI * pangkat(jariJari, 3);
+        volume = hitungVolume(jariJari);
         return volume;
+    }
+
+    public double hitungVolume(double r) {
+        double radius = wajibPositif("Jari-jari", r);
+        volume2 = (4.0 / 3.0) * PI * pangkat(radius, 3);
+        return volume2;
     }
 
     @Override

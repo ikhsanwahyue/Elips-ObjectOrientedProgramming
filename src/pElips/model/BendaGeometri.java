@@ -6,8 +6,11 @@ public abstract class BendaGeometri implements Runnable {
 
     private String namaBenda;
     protected volatile double luas;
+    protected volatile double luas2;
     protected volatile double keliling;
+    protected volatile double keliling2;
     protected volatile double volume;
+    protected volatile double volume2;
     private volatile int progress;
     private volatile String statusProses;
 

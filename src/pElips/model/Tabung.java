@@ -14,22 +14,40 @@ public class Tabung extends Bola {
     public double hitungLuas() {
         luasAlas = PI * pangkat(jariJari, 2);
         luasSelimut = 2 * PI * jariJari * tinggi;
-        luas = (2 * luasAlas) + luasSelimut;
+        luas = hitungLuas(jariJari, tinggi);
         return luas;
+    }
+
+    public double hitungLuas(double r, double tinggi) {
+        double radius = wajibPositif("Jari-jari alas", r);
+        double tinggiHitung = wajibPositif("Tinggi", tinggi);
+        double luasAlasHitung = PI * pangkat(radius, 2);
+        double luasSelimutHitung = 2 * PI * radius * tinggiHitung;
+        return (2 * luasAlasHitung) + luasSelimutHitung;
     }
 
     @Override
     public double hitungKeliling() {
-        kelilingLingkaranBesar = 2 * PI * jariJari;
+        kelilingLingkaranBesar = hitungKeliling(jariJari);
         keliling = kelilingLingkaranBesar;
         return keliling;
+    }
+
+    public double hitungKeliling(double r) {
+        return super.hitungKeliling(r);
     }
 
     @Override
     public double hitungVolume() {
         luasAlas = PI * pangkat(jariJari, 2);
-        volume = luasAlas * tinggi;
+        volume = hitungVolume(jariJari, tinggi);
         return volume;
+    }
+
+    public double hitungVolume(double r, double tinggi) {
+        double radius = wajibPositif("Jari-jari alas", r);
+        double tinggiHitung = wajibPositif("Tinggi", tinggi);
+        return PI * pangkat(radius, 2) * tinggiHitung;
     }
 
     @Override

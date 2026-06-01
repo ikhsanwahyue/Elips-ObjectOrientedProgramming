@@ -12,20 +12,42 @@ public class Cincin extends Bola {
 
     @Override
     public double hitungLuas() {
-        luas = 4 * pangkat(PI, 2) * jariJariMayor * jariJariMinor;
+        luas = hitungLuas(jariJariMayor, jariJariMinor);
         return luas;
+    }
+
+    public double hitungLuas(double R, double r) {
+        double mayor = wajibPositif("Jari-jari mayor", R);
+        double minor = wajibPositif("Jari-jari minor", r);
+        validasi(mayor > minor, "Jari-jari mayor harus lebih besar dari jari-jari minor.");
+        luas2 = 4 * pangkat(PI, 2) * mayor * minor;
+        return luas2;
     }
 
     @Override
     public double hitungKeliling() {
-        keliling = 2 * PI * jariJariMayor;
+        keliling = hitungKeliling(jariJariMayor);
         return keliling;
+    }
+
+    public double hitungKeliling(double R) {
+        double mayor = wajibPositif("Jari-jari mayor", R);
+        keliling2 = 2 * PI * mayor;
+        return keliling2;
     }
 
     @Override
     public double hitungVolume() {
-        volume = 2 * pangkat(PI, 2) * jariJariMayor * pangkat(jariJariMinor, 2);
+        volume = hitungVolume(jariJariMayor, jariJariMinor);
         return volume;
+    }
+
+    public double hitungVolume(double R, double r) {
+        double mayor = wajibPositif("Jari-jari mayor", R);
+        double minor = wajibPositif("Jari-jari minor", r);
+        validasi(mayor > minor, "Jari-jari mayor harus lebih besar dari jari-jari minor.");
+        volume2 = 2 * pangkat(PI, 2) * mayor * pangkat(minor, 2);
+        return volume2;
     }
 
     @Override

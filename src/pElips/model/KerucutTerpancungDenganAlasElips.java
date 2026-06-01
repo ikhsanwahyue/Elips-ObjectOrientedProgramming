@@ -18,28 +18,71 @@ public class KerucutTerpancungDenganAlasElips extends KerucutDenganAlasElips {
     public double hitungLuas() {
         luasAlasBawah = hitungLuasElips(sumbuA, sumbuB);
         luasAlasAtas = hitungLuasElips(sumbuA2, sumbuB2);
-        double kelilingBawah = super.hitungKeliling();
+        double kelilingBawah = hitungKelilingElips(sumbuA, sumbuB);
         double kelilingAtas = hitungKelilingElips(sumbuA2, sumbuB2);
         double diffA = sumbuA - sumbuA2;
         double diffB = sumbuB - sumbuB2;
         garisPelukis = akarKuadrat(getTinggi() * getTinggi() + (diffA * diffA + diffB * diffB) / 2.0);
         luasSelimut = 0.5 * (kelilingBawah + kelilingAtas) * garisPelukis;
-        luas = luasAlasBawah + luasAlasAtas + luasSelimut;
+        luas = hitungLuas(sumbuA, sumbuB, sumbuA2, sumbuB2, getTinggi());
         return luas;
+    }
+
+    public double hitungLuas(double a1, double b1, double a2, double b2, double tinggi) {
+        double bawahA = wajibPositif("Sumbu A bawah", a1);
+        double bawahB = wajibPositif("Sumbu B bawah", b1);
+        double atasA = wajibPositif("Sumbu A atas", a2);
+        double atasB = wajibPositif("Sumbu B atas", b2);
+        double tinggiHitung = wajibPositif("Tinggi", tinggi);
+        validasi(atasA < bawahA, "Sumbu A atas harus lebih kecil dari sumbu A bawah.");
+        validasi(atasB < bawahB, "Sumbu B atas harus lebih kecil dari sumbu B bawah.");
+
+        double alasBawah = hitungLuasElips(bawahA, bawahB);
+        double alasAtas = hitungLuasElips(atasA, atasB);
+        double kelilingBawah = hitungKelilingElips(bawahA, bawahB);
+        double kelilingAtas = hitungKelilingElips(atasA, atasB);
+        double diffA = bawahA - atasA;
+        double diffB = bawahB - atasB;
+        double garisPelukisHitung = akarKuadrat(tinggiHitung * tinggiHitung + (diffA * diffA + diffB * diffB) / 2.0);
+        luas2 = alasBawah + alasAtas + 0.5 * (kelilingBawah + kelilingAtas) * garisPelukisHitung;
+        return luas2;
     }
 
     @Override
     public double hitungKeliling() {
-        keliling = hitungKelilingElips(sumbuA, sumbuB) + hitungKelilingElips(sumbuA2, sumbuB2);
+        keliling = hitungKeliling(sumbuA, sumbuB, sumbuA2, sumbuB2);
         return keliling;
+    }
+
+    public double hitungKeliling(double a1, double b1, double a2, double b2) {
+        double bawahA = wajibPositif("Sumbu A bawah", a1);
+        double bawahB = wajibPositif("Sumbu B bawah", b1);
+        double atasA = wajibPositif("Sumbu A atas", a2);
+        double atasB = wajibPositif("Sumbu B atas", b2);
+        validasi(atasA < bawahA, "Sumbu A atas harus lebih kecil dari sumbu A bawah.");
+        validasi(atasB < bawahB, "Sumbu B atas harus lebih kecil dari sumbu B bawah.");
+        keliling2 = hitungKelilingElips(bawahA, bawahB) + hitungKelilingElips(atasA, atasB);
+        return keliling2;
     }
 
     @Override
     public double hitungVolume() {
-        double ab1 = sumbuA * sumbuB;
-        double ab2 = sumbuA2 * sumbuB2;
-        volume = (1.0 / 3.0) * PI * getTinggi() * (ab1 + ab2 + akarKuadrat(ab1 * ab2));
+        volume = hitungVolume(sumbuA, sumbuB, sumbuA2, sumbuB2, getTinggi());
         return volume;
+    }
+
+    public double hitungVolume(double a1, double b1, double a2, double b2, double tinggi) {
+        double bawahA = wajibPositif("Sumbu A bawah", a1);
+        double bawahB = wajibPositif("Sumbu B bawah", b1);
+        double atasA = wajibPositif("Sumbu A atas", a2);
+        double atasB = wajibPositif("Sumbu B atas", b2);
+        double tinggiHitung = wajibPositif("Tinggi", tinggi);
+        validasi(atasA < bawahA, "Sumbu A atas harus lebih kecil dari sumbu A bawah.");
+        validasi(atasB < bawahB, "Sumbu B atas harus lebih kecil dari sumbu B bawah.");
+        double ab1 = bawahA * bawahB;
+        double ab2 = atasA * atasB;
+        volume2 = (1.0 / 3.0) * PI * tinggiHitung * (ab1 + ab2 + akarKuadrat(ab1 * ab2));
+        return volume2;
     }
 
     @Override

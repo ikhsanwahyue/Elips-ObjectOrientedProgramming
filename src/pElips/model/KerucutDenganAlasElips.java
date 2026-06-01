@@ -26,21 +26,47 @@ public class KerucutDenganAlasElips extends Elips {
         garisPelukisA = akarKuadrat(sumbuA * sumbuA + tinggi * tinggi);
         garisPelukisB = akarKuadrat(sumbuB * sumbuB + tinggi * tinggi);
         luasSelimut = PI * (sumbuA * garisPelukisB + sumbuB * garisPelukisA) / 2.0;
-        luas = luasAlas + luasSelimut;
+        luas = hitungLuas(sumbuA, sumbuB, tinggi);
         return luas;
+    }
+
+    public double hitungLuas(double a, double b, double tinggi) {
+        double sumbuAHitung = wajibPositif("Sumbu A", a);
+        double sumbuBHitung = wajibPositif("Sumbu B", b);
+        double tinggiHitung = wajibPositif("Tinggi", tinggi);
+        double luasAlasHitung = hitungLuasElips(sumbuAHitung, sumbuBHitung);
+        double garisPelukisAHitung = akarKuadrat(sumbuAHitung * sumbuAHitung + tinggiHitung * tinggiHitung);
+        double garisPelukisBHitung = akarKuadrat(sumbuBHitung * sumbuBHitung + tinggiHitung * tinggiHitung);
+        double luasSelimutHitung = PI * (sumbuAHitung * garisPelukisBHitung
+                + sumbuBHitung * garisPelukisAHitung) / 2.0;
+        luas2 = luasAlasHitung + luasSelimutHitung;
+        return luas2;
     }
 
     @Override
     public double hitungKeliling() {
-        keliling = hitungKelilingElips(sumbuA, sumbuB);
+        keliling = hitungKeliling(sumbuA, sumbuB);
         return keliling;
+    }
+
+    public double hitungKeliling(double a, double b) {
+        keliling2 = super.hitungKeliling(a, b);
+        return keliling2;
     }
 
     @Override
     public double hitungVolume() {
         luasAlas = hitungLuasElips(sumbuA, sumbuB);
-        volume = (1.0 / 3.0) * luasAlas * tinggi;
+        volume = hitungVolume(sumbuA, sumbuB, tinggi);
         return volume;
+    }
+
+    public double hitungVolume(double a, double b, double tinggi) {
+        double sumbuAHitung = wajibPositif("Sumbu A", a);
+        double sumbuBHitung = wajibPositif("Sumbu B", b);
+        double tinggiHitung = wajibPositif("Tinggi", tinggi);
+        volume2 = (1.0 / 3.0) * hitungLuasElips(sumbuAHitung, sumbuBHitung) * tinggiHitung;
+        return volume2;
     }
 
     @Override

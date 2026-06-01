@@ -12,21 +12,46 @@ public class Juring extends Bola {
     @Override
     public double hitungLuas() {
         jariJariAlas = hitungJariJariAlas();
-        luas = PI * jariJari * (2 * tinggiTopi + jariJariAlas);
+        luas = hitungLuas(jariJari, tinggiTopi);
         return luas;
+    }
+
+    public double hitungLuas(double r, double h) {
+        double radius = wajibPositif("Jari-jari bola", r);
+        double tinggi = wajibPositif("Tinggi topi", h);
+        validasi(tinggi <= 2 * radius, "Tinggi topi maksimal 2 x jari-jari bola.");
+        double alas = hitungJariJariAlas(radius, tinggi);
+        luas2 = PI * pangkat(alas, 2) + PI * radius * tinggi;
+        return luas2;
     }
 
     @Override
     public double hitungKeliling() {
         jariJariAlas = hitungJariJariAlas();
-        keliling = 2 * PI * jariJariAlas;
+        keliling = hitungKeliling(jariJari, tinggiTopi);
         return keliling;
+    }
+
+    public double hitungKeliling(double r, double h) {
+        double radius = wajibPositif("Jari-jari bola", r);
+        double tinggi = wajibPositif("Tinggi topi", h);
+        validasi(tinggi <= 2 * radius, "Tinggi topi maksimal 2 x jari-jari bola.");
+        keliling2 = 2 * PI * hitungJariJariAlas(radius, tinggi);
+        return keliling2;
     }
 
     @Override
     public double hitungVolume() {
-        volume = (2.0 / 3.0) * PI * pangkat(jariJari, 2) * tinggiTopi;
+        volume = hitungVolume(jariJari, tinggiTopi);
         return volume;
+    }
+
+    public double hitungVolume(double r, double h) {
+        double radius = wajibPositif("Jari-jari bola", r);
+        double tinggi = wajibPositif("Tinggi topi", h);
+        validasi(tinggi <= 2 * radius, "Tinggi topi maksimal 2 x jari-jari bola.");
+        volume2 = (2.0 / 3.0) * PI * pangkat(radius, 2) * tinggi;
+        return volume2;
     }
 
     @Override
@@ -43,6 +68,10 @@ public class Juring extends Bola {
 
     private double hitungJariJariAlas() {
         return akarKuadrat(tinggiTopi * (2 * jariJari - tinggiTopi));
+    }
+
+    private double hitungJariJariAlas(double r, double h) {
+        return akarKuadrat(h * (2 * r - h));
     }
 
     public double getTinggiTopi() {
