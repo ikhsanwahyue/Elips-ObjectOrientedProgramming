@@ -23,7 +23,8 @@ public class Tabung extends Bola {
         double tinggiHitung = wajibPositif("Tinggi", tinggi);
         double luasAlasHitung = PI * pangkat(radius, 2);
         double luasSelimutHitung = 2 * PI * radius * tinggiHitung;
-        return (2 * luasAlasHitung) + luasSelimutHitung;
+        luas2 = (2 * luasAlasHitung) + luasSelimutHitung;
+        return luas2;
     }
 
     @Override
@@ -34,7 +35,8 @@ public class Tabung extends Bola {
     }
 
     public double hitungKeliling(double r) {
-        return super.hitungKeliling(r);
+        keliling2 = super.hitungKeliling(r);
+        return keliling2;
     }
 
     @Override
@@ -47,7 +49,13 @@ public class Tabung extends Bola {
     public double hitungVolume(double r, double tinggi) {
         double radius = wajibPositif("Jari-jari alas", r);
         double tinggiHitung = wajibPositif("Tinggi", tinggi);
-        return PI * pangkat(radius, 2) * tinggiHitung;
+        volume2 = PI * pangkat(radius, 2) * tinggiHitung;
+        return volume2;
+    }
+
+    @Override
+    public void run() {
+        super.run();
     }
 
     @Override

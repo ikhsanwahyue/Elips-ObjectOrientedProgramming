@@ -1,9 +1,9 @@
 package pElips.model;
 
 public class Bola extends BendaGeometri {
-    protected double jariJari;
-    protected double diameter;
-    protected double kelilingLingkaranBesar;
+    public double jariJari;
+    public double diameter;
+    public double kelilingLingkaranBesar;
 
     public Bola(String nama, double r) {
         super(nama);
@@ -45,6 +45,11 @@ public class Bola extends BendaGeometri {
         double radius = wajibPositif("Jari-jari", r);
         volume2 = (4.0 / 3.0) * PI * pangkat(radius, 3);
         return volume2;
+    }
+
+    @Override
+    public void run() {
+        super.run();
     }
 
     @Override

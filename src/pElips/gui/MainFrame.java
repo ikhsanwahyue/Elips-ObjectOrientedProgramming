@@ -65,12 +65,6 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicIntegerArray;
 
 public class MainFrame extends JFrame {
     private static final int DATA_PER_BENDA = 100000;
@@ -84,6 +78,7 @@ public class MainFrame extends JFrame {
     };
     private static final int JUMLAH_KATEGORI = NAMA_KATEGORI.length;
     private static final int TOTAL_DATA_DEMO = DATA_PER_BENDA * JUMLAH_KATEGORI;
+    private static final int[] KUOTA_INTERRUPT_DEMO = { 3, 1, 3, 3, 3, 3, 3, 3 };
 
     private static final Color NAVY = new Color(3, 28, 69);
     private static final Color NAVY_DARK = new Color(2, 18, 47);
@@ -653,48 +648,60 @@ public class MainFrame extends JFrame {
                 SwingUtilities.invokeLater(() -> {
                     tableModel.setData(dataMassal);
                     txtOutput.append("Tabel sudah berisi " + formatInteger(dataMassal.size())
-                            + " data. Setiap benda selesai dalam batch kategorinya.\n");
+                            + " data. Demo berjalan bergantian memakai Thread.start().\n");
+                    txtOutput.append("Pola interrupt: Elips 3 data, Bola 1 data, class lain 3 data, "
+                            + "lalu interrupt dan lanjut kategori berikutnya.\n");
                 });
 
-                AtomicIntegerArray kategoriDone = new AtomicIntegerArray(JUMLAH_KATEGORI);
-                AtomicInteger totalDone = new AtomicInteger();
-                CountDownLatch latch = new CountDownLatch(JUMLAH_KATEGORI);
-                ExecutorService executor = Executors.newFixedThreadPool(JUMLAH_KATEGORI);
+                int[] kategoriDone = new int[JUMLAH_KATEGORI];
+                int[] indeksKategori = new int[JUMLAH_KATEGORI];
+                int totalDone = 0;
 
                 long mulai = System.currentTimeMillis();
-                for (int i = 0; i < JUMLAH_KATEGORI; i++) {
-                    final int kategoriIndex = i;
-                    final int fromIndex = kategoriIndex * DATA_PER_BENDA;
-                    final int toIndex = fromIndex + DATA_PER_BENDA;
+                long updateTerakhir = 0L;
 
-                    executor.execute(() -> {
-                        try {
-                            for (int j = fromIndex; j < toIndex; j++) {
-                                dataMassal.get(j).run();
-                                kategoriDone.incrementAndGet(kategoriIndex);
-                                totalDone.incrementAndGet();
-                            }
-                        } finally {
-                            latch.countDown();
-                        }
-                    });
-                }
-
-                try {
-                    while (!latch.await(120, TimeUnit.MILLISECONDS)) {
-                        jadwalkanUpdateVisual(totalDone, kategoriDone);
+                while (totalDone < TOTAL_DATA_DEMO) {
+                    if (Thread.currentThread().isInterrupted() || isCancelled()) {
+                        throw new InterruptedException("Demo multithreading dibatalkan.");
                     }
-                } catch (InterruptedException ex) {
-                    executor.shutdownNow();
-                    Thread.currentThread().interrupt();
-                    throw ex;
-                } finally {
-                    executor.shutdown();
+
+                    for (int kategoriIndex = 0; kategoriIndex < JUMLAH_KATEGORI; kategoriIndex++) {
+                        if (indeksKategori[kategoriIndex] >= DATA_PER_BENDA) {
+                            continue;
+                        }
+
+                        int berhasilGiliran = 0;
+                        int kuotaGiliran = KUOTA_INTERRUPT_DEMO[kategoriIndex];
+                        while (berhasilGiliran < kuotaGiliran
+                                && indeksKategori[kategoriIndex] < DATA_PER_BENDA) {
+                            int dataIndex = kategoriIndex * DATA_PER_BENDA + indeksKategori[kategoriIndex];
+                            if (jalankanDenganStart(dataMassal.get(dataIndex), false)) {
+                                indeksKategori[kategoriIndex]++;
+                                kategoriDone[kategoriIndex]++;
+                                totalDone++;
+                                berhasilGiliran++;
+                            }
+                        }
+
+                        if (indeksKategori[kategoriIndex] < DATA_PER_BENDA) {
+                            int dataIndex = kategoriIndex * DATA_PER_BENDA + indeksKategori[kategoriIndex];
+                            if (jalankanDenganStart(dataMassal.get(dataIndex), true)) {
+                                indeksKategori[kategoriIndex]++;
+                                kategoriDone[kategoriIndex]++;
+                                totalDone++;
+                            }
+                        }
+
+                        long sekarang = System.currentTimeMillis();
+                        if (sekarang - updateTerakhir >= 120 || totalDone == TOTAL_DATA_DEMO) {
+                            jadwalkanUpdateVisual(totalDone, kategoriDone);
+                            updateTerakhir = sekarang;
+                        }
+                    }
                 }
 
-                executor.awaitTermination(1, TimeUnit.MINUTES);
                 jadwalkanUpdateVisual(totalDone, kategoriDone);
-                return new DemoResult(dataMassal.size(), System.currentTimeMillis() - mulai);
+                return new DemoResult(totalDone, System.currentTimeMillis() - mulai);
             }
 
             @Override
@@ -724,6 +731,24 @@ public class MainFrame extends JFrame {
         };
 
         worker.execute();
+    }
+
+    private boolean jalankanDenganStart(BendaGeometri benda, boolean langsungInterrupt) throws InterruptedException {
+        Thread thread = benda.buatThread();
+        thread.start();
+
+        if (langsungInterrupt && thread.isAlive()) {
+            thread.interrupt();
+        }
+
+        try {
+            thread.join();
+        } catch (InterruptedException ex) {
+            thread.interrupt();
+            throw ex;
+        }
+
+        return "Selesai".equals(benda.getStatusProses());
     }
 
     private List<BendaGeometri> buatDataMassalPerBenda() {
@@ -774,13 +799,9 @@ public class MainFrame extends JFrame {
         return min + rand.nextDouble() * (max - min);
     }
 
-    private void jadwalkanUpdateVisual(AtomicInteger totalDone, AtomicIntegerArray kategoriDone) {
-        int totalSnapshot = totalDone.get();
-        int[] kategoriSnapshot = new int[JUMLAH_KATEGORI];
-        for (int i = 0; i < JUMLAH_KATEGORI; i++) {
-            kategoriSnapshot[i] = kategoriDone.get(i);
-        }
-
+    private void jadwalkanUpdateVisual(int totalDone, int[] kategoriDone) {
+        int totalSnapshot = totalDone;
+        int[] kategoriSnapshot = Arrays.copyOf(kategoriDone, kategoriDone.length);
         SwingUtilities.invokeLater(() -> perbaruiVisual(totalSnapshot, kategoriSnapshot));
     }
 

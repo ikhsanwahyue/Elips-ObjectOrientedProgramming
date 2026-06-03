@@ -1,8 +1,8 @@
 package pElips.model;
 
 public class Elips extends BendaGeometri {
-    protected double sumbuA;
-    protected double sumbuB;
+    public double sumbuA;
+    public double sumbuB;
 
     public Elips(String nama, double a, double b) {
         super(nama);
@@ -19,7 +19,8 @@ public class Elips extends BendaGeometri {
     public double hitungLuas(double a, double b) {
         double sumbuAHitung = wajibPositif("Sumbu A", a);
         double sumbuBHitung = wajibPositif("Sumbu B", b);
-        return hitungLuasElips(sumbuAHitung, sumbuBHitung);
+        luas2 = hitungLuasElips(sumbuAHitung, sumbuBHitung);
+        return luas2;
     }
 
     @Override
@@ -49,6 +50,11 @@ public class Elips extends BendaGeometri {
     }
 
     @Override
+    public void run() {
+        super.run();
+    }
+
+    @Override
     public void cetakInfo() {
         hitungSemua();
         System.out.println("--- Data Geometri: " + getNamaBenda() + " ---");
@@ -58,11 +64,11 @@ public class Elips extends BendaGeometri {
         System.out.println("Keliling             : " + formatAngka(keliling));
     }
 
-    protected double hitungLuasElips(double a, double b) {
+    public double hitungLuasElips(double a, double b) {
         return PI * a * b;
     }
 
-    protected double hitungKelilingElips(double a, double b) {
+    public double hitungKelilingElips(double a, double b) {
         return PI * (3 * (a + b) - akarKuadrat((3 * a + b) * (a + 3 * b)));
     }
 

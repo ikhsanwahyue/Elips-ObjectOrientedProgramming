@@ -59,6 +59,11 @@ public class Tembereng extends Bola {
     }
 
     @Override
+    public void run() {
+        super.run();
+    }
+
+    @Override
     public void cetakInfo() {
         hitungSemua();
         System.out.println("--- Data Geometri: " + getNamaBenda() + " ---");

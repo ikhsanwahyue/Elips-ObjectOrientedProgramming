@@ -22,7 +22,7 @@ public class KerucutDenganAlasElips extends Elips {
 
     @Override
     public double hitungLuas() {
-        luasAlas = hitungLuasElips(sumbuA, sumbuB);
+        luasAlas = super.hitungLuas(sumbuA, sumbuB);
         garisPelukisA = akarKuadrat(sumbuA * sumbuA + tinggi * tinggi);
         garisPelukisB = akarKuadrat(sumbuB * sumbuB + tinggi * tinggi);
         luasSelimut = PI * (sumbuA * garisPelukisB + sumbuB * garisPelukisA) / 2.0;
@@ -34,7 +34,7 @@ public class KerucutDenganAlasElips extends Elips {
         double sumbuAHitung = wajibPositif("Sumbu A", a);
         double sumbuBHitung = wajibPositif("Sumbu B", b);
         double tinggiHitung = wajibPositif("Tinggi", tinggi);
-        double luasAlasHitung = hitungLuasElips(sumbuAHitung, sumbuBHitung);
+        double luasAlasHitung = super.hitungLuas(sumbuAHitung, sumbuBHitung);
         double garisPelukisAHitung = akarKuadrat(sumbuAHitung * sumbuAHitung + tinggiHitung * tinggiHitung);
         double garisPelukisBHitung = akarKuadrat(sumbuBHitung * sumbuBHitung + tinggiHitung * tinggiHitung);
         double luasSelimutHitung = PI * (sumbuAHitung * garisPelukisBHitung
@@ -56,7 +56,7 @@ public class KerucutDenganAlasElips extends Elips {
 
     @Override
     public double hitungVolume() {
-        luasAlas = hitungLuasElips(sumbuA, sumbuB);
+        luasAlas = super.hitungLuas(sumbuA, sumbuB);
         volume = hitungVolume(sumbuA, sumbuB, tinggi);
         return volume;
     }
@@ -65,8 +65,13 @@ public class KerucutDenganAlasElips extends Elips {
         double sumbuAHitung = wajibPositif("Sumbu A", a);
         double sumbuBHitung = wajibPositif("Sumbu B", b);
         double tinggiHitung = wajibPositif("Tinggi", tinggi);
-        volume2 = (1.0 / 3.0) * hitungLuasElips(sumbuAHitung, sumbuBHitung) * tinggiHitung;
+        volume2 = (1.0 / 3.0) * super.hitungLuas(sumbuAHitung, sumbuBHitung) * tinggiHitung;
         return volume2;
+    }
+
+    @Override
+    public void run() {
+        super.run();
     }
 
     @Override

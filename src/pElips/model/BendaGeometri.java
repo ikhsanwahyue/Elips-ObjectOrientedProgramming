@@ -2,17 +2,18 @@ package pElips.model;
 
 public abstract class BendaGeometri implements Runnable {
     public static final double PI = Math.PI;
-    private static final int JUMLAH_ITERASI_THREAD = 1000;
+    public static final int JUMLAH_ITERASI_THREAD = 1000;
 
-    private String namaBenda;
-    protected volatile double luas;
-    protected volatile double luas2;
-    protected volatile double keliling;
-    protected volatile double keliling2;
-    protected volatile double volume;
-    protected volatile double volume2;
-    private volatile int progress;
-    private volatile String statusProses;
+    public String namaBenda;
+    public volatile double luas;
+    public volatile double luas2;
+    public volatile double keliling;
+    public volatile double keliling2;
+    public volatile double volume;
+    public volatile double volume2;
+    public volatile int progress;
+    public volatile String statusProses;
+    public Thread thread;
 
     public BendaGeometri(String namaBenda) {
         setNamaBenda(namaBenda);
@@ -52,6 +53,11 @@ public abstract class BendaGeometri implements Runnable {
 
     protected void setStatusProses(String statusProses) {
         this.statusProses = statusProses;
+    }
+
+    public Thread buatThread() {
+        thread = new Thread(this, getNamaBenda());
+        return thread;
     }
 
     public abstract double hitungLuas();
