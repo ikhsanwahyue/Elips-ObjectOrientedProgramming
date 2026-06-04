@@ -32,7 +32,7 @@ public class Cincin extends Bola {
 
     public double hitungKeliling(double R) {
         double mayor = wajibPositif("Jari-jari mayor", R);
-        keliling2 = 2 * PI * mayor;
+        keliling2 = super.hitungKeliling(mayor);
         return keliling2;
     }
 

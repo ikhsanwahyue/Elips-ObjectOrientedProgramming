@@ -16,10 +16,10 @@ public class KerucutTerpancungDenganAlasElips extends KerucutDenganAlasElips {
 
     @Override
     public double hitungLuas() {
-        luasAlasBawah = hitungLuasElips(sumbuA, sumbuB);
-        luasAlasAtas = hitungLuasElips(sumbuA2, sumbuB2);
-        double kelilingBawah = hitungKelilingElips(sumbuA, sumbuB);
-        double kelilingAtas = hitungKelilingElips(sumbuA2, sumbuB2);
+        luasAlasBawah = super.hitungLuas(sumbuA, sumbuB);
+        luasAlasAtas = super.hitungLuas(sumbuA2, sumbuB2);
+        double kelilingBawah = super.hitungKeliling(sumbuA, sumbuB);
+        double kelilingAtas = super.hitungKeliling(sumbuA2, sumbuB2);
         double diffA = sumbuA - sumbuA2;
         double diffB = sumbuB - sumbuB2;
         garisPelukis = akarKuadrat(getTinggi() * getTinggi() + (diffA * diffA + diffB * diffB) / 2.0);
@@ -37,10 +37,10 @@ public class KerucutTerpancungDenganAlasElips extends KerucutDenganAlasElips {
         validasi(atasA < bawahA, "Sumbu A atas harus lebih kecil dari sumbu A bawah.");
         validasi(atasB < bawahB, "Sumbu B atas harus lebih kecil dari sumbu B bawah.");
 
-        double alasBawah = hitungLuasElips(bawahA, bawahB);
-        double alasAtas = hitungLuasElips(atasA, atasB);
-        double kelilingBawah = hitungKelilingElips(bawahA, bawahB);
-        double kelilingAtas = hitungKelilingElips(atasA, atasB);
+        double alasBawah = super.hitungLuas(bawahA, bawahB);
+        double alasAtas = super.hitungLuas(atasA, atasB);
+        double kelilingBawah = super.hitungKeliling(bawahA, bawahB);
+        double kelilingAtas = super.hitungKeliling(atasA, atasB);
         double diffA = bawahA - atasA;
         double diffB = bawahB - atasB;
         double garisPelukisHitung = akarKuadrat(tinggiHitung * tinggiHitung + (diffA * diffA + diffB * diffB) / 2.0);
@@ -61,7 +61,7 @@ public class KerucutTerpancungDenganAlasElips extends KerucutDenganAlasElips {
         double atasB = wajibPositif("Sumbu B atas", b2);
         validasi(atasA < bawahA, "Sumbu A atas harus lebih kecil dari sumbu A bawah.");
         validasi(atasB < bawahB, "Sumbu B atas harus lebih kecil dari sumbu B bawah.");
-        keliling2 = hitungKelilingElips(bawahA, bawahB) + hitungKelilingElips(atasA, atasB);
+        keliling2 = super.hitungKeliling(bawahA, bawahB) + super.hitungKeliling(atasA, atasB);
         return keliling2;
     }
 
@@ -79,9 +79,9 @@ public class KerucutTerpancungDenganAlasElips extends KerucutDenganAlasElips {
         double tinggiHitung = wajibPositif("Tinggi", tinggi);
         validasi(atasA < bawahA, "Sumbu A atas harus lebih kecil dari sumbu A bawah.");
         validasi(atasB < bawahB, "Sumbu B atas harus lebih kecil dari sumbu B bawah.");
-        double ab1 = bawahA * bawahB;
-        double ab2 = atasA * atasB;
-        volume2 = (1.0 / 3.0) * PI * tinggiHitung * (ab1 + ab2 + akarKuadrat(ab1 * ab2));
+        double alasBawah = super.hitungLuas(bawahA, bawahB);
+        double alasAtas = super.hitungLuas(atasA, atasB);
+        volume2 = (tinggiHitung / 3.0) * (alasBawah + alasAtas + akarKuadrat(alasBawah * alasAtas));
         return volume2;
     }
 

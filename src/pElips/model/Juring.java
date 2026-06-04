@@ -36,7 +36,8 @@ public class Juring extends Bola {
         double radius = wajibPositif("Jari-jari bola", r);
         double tinggi = wajibPositif("Tinggi topi", h);
         validasi(tinggi <= 2 * radius, "Tinggi topi maksimal 2 x jari-jari bola.");
-        keliling2 = 2 * PI * hitungJariJariAlas(radius, tinggi);
+        double alas = hitungJariJariAlas(radius, tinggi);
+        keliling2 = alas == 0 ? 0 : super.hitungKeliling(alas);
         return keliling2;
     }
 
