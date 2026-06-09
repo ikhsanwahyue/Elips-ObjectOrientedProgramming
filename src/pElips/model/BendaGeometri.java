@@ -20,71 +20,30 @@ public abstract class BendaGeometri implements Runnable {
      * Keyword 'volatile' memastikan bahwa nilai variabel ini selalu dibaca dan ditulis langsung dari/ke Memori Utama (Main Memory),
      * bukan dari cache CPU masing-masing thread. Hal ini mencegah terjadinya inkonsistensi data antar-thread (Thread-Safe visibility).
      */
-    public volatile double luas;
-    public volatile double luas2;
-    public volatile double keliling;
-    public volatile double keliling2;
-    public volatile double volume;
-    public volatile double volume2;
-    public volatile int progress; // Untuk mencatat persentase kemajuan thread (0-100%)
-    public volatile String statusProses; // Untuk mencatat status thread (misal: "Berjalan", "Selesai", "Dibatalkan")
+    public double luas;
+    public double luas2;
+    public double keliling;
+    public double keliling2;
+    public double volume;
+    public double volume2;
+    public int progress; // Untuk mencatat persentase kemajuan thread (0-100%)
+    public String statusProses; // Untuk mencatat status thread (misal: "Berjalan", "Selesai", "Dibatalkan")
     
     // Objek Thread yang bertugas mengontrol eksekusi proses di latar belakang
     public Thread thread;
 
     // Constructor untuk menginisialisasi nama benda dan mengatur status awal proses
     public BendaGeometri(String namaBenda) {
-        setNamaBenda(namaBenda); // Memanggil setter untuk memvalidasi input nama
-        this.statusProses = "Belum diproses"; // Mengatur status default objek saat pertama kali dibuat
-    }
-
-    // Getter untuk mengambil nama benda
-    public String getNamaBenda() {
-        return namaBenda;
-    }
-
-    // Setter untuk mengubah nama benda disertai dengan validasi data input
-    public void setNamaBenda(String namaBenda) {
-        // Validasi: Nama benda tidak boleh null, kosong, atau hanya berisi spasi
         if (namaBenda == null || namaBenda.trim().isEmpty()) {
             throw new IllegalArgumentException("Nama benda tidak boleh kosong.");
         }
         this.namaBenda = namaBenda;
-    }
-
-    // Getter untuk mengambil nilai luas
-    public double getLuas() {
-        return luas;
-    }
-
-    // Getter untuk mengambil nilai keliling
-    public double getKeliling() {
-        return keliling;
-    }
-
-    // Getter untuk mengambil nilai volume
-    public double getVolume() {
-        return volume;
-    }
-
-    // Getter untuk memantau perkembangan/progress komputasi
-    public int getProgress() {
-        return progress;
-    }
-
-    // Getter untuk memantau status proses saat ini
-    public String getStatusProses() {
-        return statusProses;
-    }
-
-    // Setter dengan hak akses protected untuk mengubah status proses secara internal/oleh class turunan
-    protected void setStatusProses(String statusProses) {
-        this.statusProses = statusProses;
+        this.statusProses = "Belum diproses"; // Mengatur status default objek saat pertama kali dibuat
     }
 
     // Method untuk membuat objek Thread baru dan memberikan nama thread sesuai nama benda geometri
     public Thread buatThread() {
-        thread = new Thread(this, getNamaBenda()); // 'this' merujuk pada objek Runnable saat ini
+        thread = new Thread(this, namaBenda); // 'this' merujuk pada objek Runnable saat ini
         return thread;
     }
 
@@ -148,16 +107,12 @@ public abstract class BendaGeometri implements Runnable {
     public abstract void cetakInfo();
 
     // Method pembantu (utility) untuk menghitung perpangkatan bilangan
-    protected double pangkat(double angka, int eksponen) {
-        double hasil = 1.0;
-        for (int i = 0; i < eksponen; i++) {
-            hasil *= angka;
-        }
-        return hasil;
+    public double pangkat(double angka, int eksponen) {
+        return Math.pow(angka, eksponen);
     }
 
     // Method pembantu untuk menghitung akar kuadrat dengan toleransi presisi bilangan negatif kecil
-    protected double akarKuadrat(double angka) {
+    public double akarKuadrat(double angka) {
         // Toleransi floating-point jika angka bernilai sedikit di bawah 0 karena error pembulatan komputer
         if (angka < 0 && angka > -0.000000001) {
             angka = 0;
@@ -170,7 +125,7 @@ public abstract class BendaGeometri implements Runnable {
     }
 
     // Method pembantu untuk memvalidasi bahwa nilai dimensi (panjang/jari-jari/sumbu) harus lebih besar dari 0
-    protected double wajibPositif(String namaAtribut, double nilai) {
+    public double wajibPositif(String namaAtribut, double nilai) {
         if (nilai <= 0) {
             throw new IllegalArgumentException(namaAtribut + " harus lebih dari 0.");
         }
@@ -178,14 +133,14 @@ public abstract class BendaGeometri implements Runnable {
     }
 
     // Method validasi umum berbasis kondisi boolean
-    protected void validasi(boolean kondisi, String pesan) {
+    public void validasi(boolean kondisi, String pesan) {
         if (!kondisi) { // Catatan: Ada sedikit typo bawaan code Anda 'kondisi'/'conditions', tetapi logika tetap dipertahankan sesuai file asli Anda
             throw new IllegalArgumentException(pesan);
         }
     }
 
     // Method pembantu untuk memformat bilangan desimal agar menampilkan 4 angka di belakang koma (.4f)
-    protected String formatAngka(double nilai) {
+    public String formatAngka(double nilai) {
         return String.format("%.4f", nilai);
     }
 }

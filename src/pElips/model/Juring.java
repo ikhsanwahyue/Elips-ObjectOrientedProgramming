@@ -1,69 +1,77 @@
 package pElips.model;
 
 public class Juring extends Bola {
-    private double tinggiTopi;
-    private double jariJariAlas;
+    public double tinggiTopi;
+    public double jariJariAlas;
+    public double luasAlas;
+
+    public Juring() {
+        this("Juring", 1, 1);
+    }
 
     public Juring(String nama, double r, double h) {
         super(nama, r);
-        setTinggiTopi(h);
+        this.tinggiTopi = wajibPositif("Tinggi topi", h);
+        validasi(this.tinggiTopi <= 2 * jariJari, "Tinggi topi maksimal 2 x jari-jari bola.");
     }
 
     @Override
     public double hitungLuas() {
         jariJariAlas = hitungJariJariAlas();
-        luas = hitungLuas(jariJari, tinggiTopi);
+        hitungLuas(jariJari, tinggiTopi);
+        luas = super.luas2;
         return luas;
     }
 
     public double hitungLuas(double r, double h) {
-        double radius = wajibPositif("Jari-jari bola", r);
-        double tinggi = wajibPositif("Tinggi topi", h);
-        validasi(tinggi <= 2 * radius, "Tinggi topi maksimal 2 x jari-jari bola.");
-        double alas = hitungJariJariAlas(radius, tinggi);
-        luas2 = PI * pangkat(alas, 2) + PI * radius * tinggi;
+        jariJari = wajibPositif("Jari-jari bola", r);
+        diameter = 2 * jariJari;
+        tinggiTopi = wajibPositif("Tinggi topi", h);
+        validasi(tinggiTopi <= 2 * jariJari, "Tinggi topi maksimal 2 x jari-jari bola.");
+        jariJariAlas = hitungJariJariAlas(jariJari, tinggiTopi);
+        luasAlas = super.hitungLuasLingkaran(jariJariAlas);
+        luas2 = luasAlas + PI * jariJari * tinggiTopi;
         return luas2;
     }
 
     @Override
     public double hitungKeliling() {
         jariJariAlas = hitungJariJariAlas();
-        keliling = hitungKeliling(jariJari, tinggiTopi);
+        hitungKeliling(jariJari, tinggiTopi);
+        keliling = super.keliling2;
         return keliling;
     }
 
     public double hitungKeliling(double r, double h) {
-        double radius = wajibPositif("Jari-jari bola", r);
-        double tinggi = wajibPositif("Tinggi topi", h);
-        validasi(tinggi <= 2 * radius, "Tinggi topi maksimal 2 x jari-jari bola.");
-        double alas = hitungJariJariAlas(radius, tinggi);
-        keliling2 = alas == 0 ? 0 : super.hitungKeliling(alas);
+        jariJari = wajibPositif("Jari-jari bola", r);
+        diameter = 2 * jariJari;
+        tinggiTopi = wajibPositif("Tinggi topi", h);
+        validasi(tinggiTopi <= 2 * jariJari, "Tinggi topi maksimal 2 x jari-jari bola.");
+        jariJariAlas = hitungJariJariAlas(jariJari, tinggiTopi);
+        keliling2 = jariJariAlas == 0 ? 0 : super.hitungKelilingLingkaran(jariJariAlas);
         return keliling2;
     }
 
     @Override
     public double hitungVolume() {
-        volume = hitungVolume(jariJari, tinggiTopi);
+        hitungVolume(jariJari, tinggiTopi);
+        volume = super.volume2;
         return volume;
     }
 
     public double hitungVolume(double r, double h) {
-        double radius = wajibPositif("Jari-jari bola", r);
-        double tinggi = wajibPositif("Tinggi topi", h);
-        validasi(tinggi <= 2 * radius, "Tinggi topi maksimal 2 x jari-jari bola.");
-        volume2 = (2.0 / 3.0) * PI * pangkat(radius, 2) * tinggi;
+        jariJari = wajibPositif("Jari-jari bola", r);
+        diameter = 2 * jariJari;
+        tinggiTopi = wajibPositif("Tinggi topi", h);
+        validasi(tinggiTopi <= 2 * jariJari, "Tinggi topi maksimal 2 x jari-jari bola.");
+        volume2 = (2.0 / 3.0) * PI * pangkat(jariJari, 2) * tinggiTopi;
         return volume2;
-    }
-
-    @Override
-    public void run() {
-        super.run();
     }
 
     @Override
     public void cetakInfo() {
         hitungSemua();
-        System.out.println("--- Data Geometri: " + getNamaBenda() + " ---");
+        System.out.println("--- Data Geometri: " + namaBenda + " ---");
         System.out.println("Jari-jari Bola (r)   : " + jariJari);
         System.out.println("Tinggi Topi (h)      : " + tinggiTopi);
         System.out.println("Jari-jari Alas       : " + formatAngka(jariJariAlas));
@@ -72,24 +80,16 @@ public class Juring extends Bola {
         System.out.println("Volume Juring        : " + formatAngka(volume));
     }
 
-    private double hitungJariJariAlas() {
+    public double hitungJariJariAlas() {
         return akarKuadrat(tinggiTopi * (2 * jariJari - tinggiTopi));
     }
 
-    private double hitungJariJariAlas(double r, double h) {
-        return akarKuadrat(h * (2 * r - h));
-    }
-
-    public double getTinggiTopi() {
-        return tinggiTopi;
-    }
-
-    public void setTinggiTopi(double h) {
-        this.tinggiTopi = wajibPositif("Tinggi topi", h);
-        validasi(this.tinggiTopi <= 2 * jariJari, "Tinggi topi maksimal 2 x jari-jari bola.");
-    }
-
-    public double getJariJariAlas() {
+    public double hitungJariJariAlas(double r, double h) {
+        jariJari = wajibPositif("Jari-jari bola", r);
+        diameter = 2 * jariJari;
+        tinggiTopi = wajibPositif("Tinggi topi", h);
+        validasi(tinggiTopi <= 2 * jariJari, "Tinggi topi maksimal 2 x jari-jari bola.");
+        jariJariAlas = akarKuadrat(tinggiTopi * (2 * jariJari - tinggiTopi));
         return jariJariAlas;
     }
 }

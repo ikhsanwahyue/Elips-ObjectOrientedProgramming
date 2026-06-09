@@ -531,29 +531,39 @@ public class MainFrame extends JFrame {
 
         switch (jenis) {
             case 0:
-                return new Elips("GUI Elips", bacaNilai(txtInput1, "Sumbu A"), bacaNilai(txtInput2, "Sumbu B"));
+                Elips e1 = new Elips("GUI Elips", bacaNilai(txtInput1, "Sumbu A"),
+                        bacaNilai(txtInput2, "Sumbu B"));
+                return e1;
             case 1:
-                return new Bola("GUI Bola", bacaNilai(txtInput1, "Jari-jari"));
+                Bola b1 = new Bola("GUI Bola", bacaNilai(txtInput1, "Jari-jari"));
+                return b1;
             case 2:
-                return new Tabung("GUI Tabung", bacaNilai(txtInput1, "Jari-jari alas"),
+                Bola b2 = new Tabung("GUI Tabung", bacaNilai(txtInput1, "Jari-jari alas"),
                         bacaNilai(txtInput2, "Tinggi"));
+                return b2;
             case 3:
-                return new KerucutDenganAlasElips("GUI Kerucut Alas Elips", bacaNilai(txtInput1, "Sumbu A"),
-                        bacaNilai(txtInput2, "Sumbu B"), bacaNilai(txtInput3, "Tinggi"));
+                Elips e2 = new KerucutDenganAlasElips("GUI Kerucut Alas Elips",
+                        bacaNilai(txtInput1, "Sumbu A"), bacaNilai(txtInput2, "Sumbu B"),
+                        bacaNilai(txtInput3, "Tinggi"));
+                return e2;
             case 4:
-                return new KerucutTerpancungDenganAlasElips("GUI Kerucut Terpancung",
+                Elips e3 = new KerucutTerpancungDenganAlasElips("GUI Kerucut Terpancung",
                         bacaNilai(txtInput1, "Sumbu A bawah"), bacaNilai(txtInput2, "Sumbu B bawah"),
                         bacaNilai(txtInput3, "Sumbu A atas"), bacaNilai(txtInput4, "Sumbu B atas"),
                         bacaNilai(txtInput5, "Tinggi"));
+                return e3;
             case 5:
-                return new Cincin("GUI Cincin", bacaNilai(txtInput1, "Jari-jari mayor"),
+                Bola b3 = new Cincin("GUI Cincin", bacaNilai(txtInput1, "Jari-jari mayor"),
                         bacaNilai(txtInput2, "Jari-jari minor"));
+                return b3;
             case 6:
-                return new Juring("GUI Juring", bacaNilai(txtInput1, "Jari-jari bola"),
+                Bola b4 = new Juring("GUI Juring", bacaNilai(txtInput1, "Jari-jari bola"),
                         bacaNilai(txtInput2, "Tinggi topi"));
+                return b4;
             case 7:
-                return new Tembereng("GUI Tembereng", bacaNilai(txtInput1, "Jari-jari bola"),
+                Bola b5 = new Tembereng("GUI Tembereng", bacaNilai(txtInput1, "Jari-jari bola"),
                         bacaNilai(txtInput2, "Tinggi topi"));
+                return b5;
             default:
                 throw new IllegalArgumentException("Jenis benda tidak valid.");
         }
@@ -574,13 +584,13 @@ public class MainFrame extends JFrame {
 
     private void tampilkanHasilManual(BendaGeometri benda) {
         txtOutput.setText("=== HASIL PERHITUNGAN ===\n");
-        txtOutput.append("Nama Objek : " + benda.getNamaBenda() + "\n");
+        txtOutput.append("Nama Objek : " + benda.namaBenda + "\n");
         txtOutput.append("Jenis      : " + benda.getClass().getSimpleName() + "\n");
         txtOutput.append(detailDimensi(benda));
-        txtOutput.append("Luas       : " + format(benda.getLuas()) + "\n");
-        txtOutput.append("Keliling   : " + format(benda.getKeliling()) + "\n");
-        txtOutput.append("Volume     : " + format(benda.getVolume()) + "\n");
-        txtOutput.append("Status     : " + benda.getStatusProses() + "\n");
+        txtOutput.append("Luas       : " + format(benda.luas) + "\n");
+        txtOutput.append("Keliling   : " + format(benda.keliling) + "\n");
+        txtOutput.append("Volume     : " + format(benda.volume) + "\n");
+        txtOutput.append("Status     : " + benda.statusProses + "\n");
     }
 
     private String detailDimensi(BendaGeometri benda) {
@@ -588,46 +598,46 @@ public class MainFrame extends JFrame {
 
         if (benda instanceof KerucutTerpancungDenganAlasElips) {
             KerucutTerpancungDenganAlasElips k = (KerucutTerpancungDenganAlasElips) benda;
-            detail.append("a1 / b1    : ").append(format(k.getSumbuA())).append(" / ")
-                    .append(format(k.getSumbuB())).append("\n");
-            detail.append("a2 / b2    : ").append(format(k.getSumbuA2())).append(" / ")
-                    .append(format(k.getSumbuB2())).append("\n");
-            detail.append("Tinggi     : ").append(format(k.getTinggi())).append("\n");
-            detail.append("Selimut    : ").append(format(k.getLuasSelimutTerpancung())).append("\n");
+            detail.append("a1 / b1    : ").append(format(k.sumbuA)).append(" / ")
+                    .append(format(k.sumbuB)).append("\n");
+            detail.append("a2 / b2    : ").append(format(k.sumbuA2)).append(" / ")
+                    .append(format(k.sumbuB2)).append("\n");
+            detail.append("Tinggi     : ").append(format(k.tinggi)).append("\n");
+            detail.append("Selimut    : ").append(format(k.luasSelimut)).append("\n");
         } else if (benda instanceof KerucutDenganAlasElips) {
             KerucutDenganAlasElips k = (KerucutDenganAlasElips) benda;
-            detail.append("Sumbu A/B  : ").append(format(k.getSumbuA())).append(" / ")
-                    .append(format(k.getSumbuB())).append("\n");
-            detail.append("Tinggi     : ").append(format(k.getTinggi())).append("\n");
-            detail.append("Selimut    : ").append(format(k.getLuasSelimut())).append("\n");
+            detail.append("Sumbu A/B  : ").append(format(k.sumbuA)).append(" / ")
+                    .append(format(k.sumbuB)).append("\n");
+            detail.append("Tinggi     : ").append(format(k.tinggi)).append("\n");
+            detail.append("Selimut    : ").append(format(k.luasSelimut)).append("\n");
         } else if (benda instanceof Elips) {
             Elips e = (Elips) benda;
-            detail.append("Sumbu A/B  : ").append(format(e.getSumbuA())).append(" / ")
-                    .append(format(e.getSumbuB())).append("\n");
+            detail.append("Sumbu A/B  : ").append(format(e.sumbuA)).append(" / ")
+                    .append(format(e.sumbuB)).append("\n");
         } else if (benda instanceof Tabung) {
             Tabung t = (Tabung) benda;
-            detail.append("Jari-jari  : ").append(format(t.getJariJari())).append("\n");
+            detail.append("Jari-jari  : ").append(format(t.jariJari)).append("\n");
             detail.append("Tinggi     : ").append(format(t.getTinggi())).append("\n");
             detail.append("Luas Alas  : ").append(format(t.getLuasAlas())).append("\n");
             detail.append("Selimut    : ").append(format(t.getLuasSelimut())).append("\n");
         } else if (benda instanceof Cincin) {
             Cincin c = (Cincin) benda;
-            detail.append("R / r      : ").append(format(c.getJariJariMayor())).append(" / ")
-                    .append(format(c.getJariJariMinor())).append("\n");
+            detail.append("R / r      : ").append(format(c.jariJariMayor)).append(" / ")
+                    .append(format(c.jariJariMinor)).append("\n");
         } else if (benda instanceof Juring) {
             Juring j = (Juring) benda;
-            detail.append("Jari-jari  : ").append(format(j.getJariJari())).append("\n");
-            detail.append("Tinggi h   : ").append(format(j.getTinggiTopi())).append("\n");
-            detail.append("Radius alas: ").append(format(j.getJariJariAlas())).append("\n");
+            detail.append("Jari-jari  : ").append(format(j.jariJari)).append("\n");
+            detail.append("Tinggi h   : ").append(format(j.tinggiTopi)).append("\n");
+            detail.append("Radius alas: ").append(format(j.jariJariAlas)).append("\n");
         } else if (benda instanceof Tembereng) {
             Tembereng t = (Tembereng) benda;
-            detail.append("Jari-jari  : ").append(format(t.getJariJari())).append("\n");
-            detail.append("Tinggi h   : ").append(format(t.getTinggiTopi())).append("\n");
-            detail.append("Radius alas: ").append(format(t.getJariJariAlas())).append("\n");
+            detail.append("Jari-jari  : ").append(format(t.jariJari)).append("\n");
+            detail.append("Tinggi h   : ").append(format(t.tinggiTopi)).append("\n");
+            detail.append("Radius alas: ").append(format(t.jariJariAlas)).append("\n");
         } else if (benda instanceof Bola) {
             Bola b = (Bola) benda;
-            detail.append("Jari-jari  : ").append(format(b.getJariJari())).append("\n");
-            detail.append("Diameter   : ").append(format(b.getDiameter())).append("\n");
+            detail.append("Jari-jari  : ").append(format(b.jariJari)).append("\n");
+            detail.append("Diameter   : ").append(format(b.diameter)).append("\n");
         }
 
         return detail.toString();
@@ -748,7 +758,7 @@ public class MainFrame extends JFrame {
             throw ex;
         }
 
-        return "Selesai".equals(benda.getStatusProses());
+        return "Selesai".equals(benda.statusProses);
     }
 
     private List<BendaGeometri> buatDataMassalPerBenda() {
@@ -773,23 +783,31 @@ public class MainFrame extends JFrame {
 
         switch (kategori) {
             case 0:
-                return new Elips(nama, a, b);
+                Elips e1 = new Elips(nama, a, b);
+                return e1;
             case 1:
-                return new Bola(nama, r);
+                Bola b1 = new Bola(nama, r);
+                return b1;
             case 2:
-                return new Tabung(nama, r, tinggi);
+                Bola b2 = new Tabung(nama, r, tinggi);
+                return b2;
             case 3:
-                return new KerucutDenganAlasElips(nama, a, b, tinggi);
+                Elips e2 = new KerucutDenganAlasElips(nama, a, b, tinggi);
+                return e2;
             case 4:
-                return new KerucutTerpancungDenganAlasElips(nama, a, b,
+                Elips e3 = new KerucutTerpancungDenganAlasElips(nama, a, b,
                         a * acak(rand, 0.25, 0.75), b * acak(rand, 0.25, 0.75), tinggi);
+                return e3;
             case 5:
                 double minor = acak(rand, 2, 12);
-                return new Cincin(nama, minor + acak(rand, 5, 30), minor);
+                Bola b3 = new Cincin(nama, minor + acak(rand, 5, 30), minor);
+                return b3;
             case 6:
-                return new Juring(nama, r, acak(rand, 0.5, 2 * r));
+                Bola b4 = new Juring(nama, r, acak(rand, 0.5, 2 * r));
+                return b4;
             case 7:
-                return new Tembereng(nama, r, acak(rand, 0.5, 2 * r));
+                Bola b5 = new Tembereng(nama, r, acak(rand, 0.5, 2 * r));
+                return b5;
             default:
                 return new Bola(nama, r);
         }
@@ -984,19 +1002,19 @@ public class MainFrame extends JFrame {
                 case 0:
                     return rowIndex + 1;
                 case 1:
-                    return benda.getNamaBenda();
+                    return benda.namaBenda;
                 case 2:
                     return benda.getClass().getSimpleName();
                 case 3:
-                    return format(benda.getLuas());
+                    return format(benda.luas);
                 case 4:
-                    return format(benda.getKeliling());
+                    return format(benda.keliling);
                 case 5:
-                    return format(benda.getVolume());
+                    return format(benda.volume);
                 case 6:
-                    return benda.getProgress() + "%";
+                    return benda.progress + "%";
                 case 7:
-                    return benda.getStatusProses();
+                    return benda.statusProses;
                 default:
                     return "";
             }
