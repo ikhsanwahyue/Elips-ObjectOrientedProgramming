@@ -23,6 +23,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
+import javax.swing.Scrollable;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
@@ -30,8 +31,11 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
+import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
@@ -42,6 +46,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.GradientPaint;
@@ -51,7 +56,11 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Polygon;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.Toolkit;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
@@ -86,7 +95,24 @@ public class MainFrame extends JFrame {
     private static final Color BG = new Color(242, 247, 253);
     private static final Color BORDER = new Color(210, 223, 241);
     private static final Color TEXT = new Color(7, 28, 72);
+    private static final int BREAKPOINT_DESKTOP = 1120;
+    private static final int BREAKPOINT_PHONE = 620;
+    private static final int MODE_DESKTOP = 0;
+    private static final int MODE_TABLET = 1;
+    private static final int MODE_PHONE = 2;
 
+    private JPanel mainArea;
+    private JPanel kontenUtama;
+    private RoundedPanel sidebarPanel;
+    private RoundedPanel chartCardPanel;
+    private JSplitPane bottomSplit;
+    private JPanel previewGrid;
+    private JPanel tableHeaderPanel;
+    private JPanel tableTitlePanel;
+    private JPanel tableToolsPanel;
+    private JPanel statusBar;
+    private JPanel statusLeft;
+    private JPanel statusRight;
     private JComboBox<String> cmbJenisBenda;
     private JTextField txtInput1;
     private JTextField txtInput2;
@@ -101,22 +127,32 @@ public class MainFrame extends JFrame {
     private JTextArea txtOutput;
     private JButton btnHitung;
     private JButton btnDemoThread;
+    private JTextField txtSearch;
     private JTable tblData;
     private GeometriTableModel tableModel;
     private BarRacePanel barRacePanel;
     private JLabel lblStatusThread;
     private JLabel lblStatusData;
     private JLabel lblStatusWaktu;
+    private Timer searchTimer;
+    private int kolomPreviewAktif = -1;
 
     public MainFrame() {
         setTitle("Aplikasi Geometri Elips - OOP dan Multithreading");
-        setSize(1500, 860);
-        setMinimumSize(new Dimension(1180, 720));
+        setSize(dapatkanUkuranAwal());
+        setMinimumSize(new Dimension(360, 560));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         initComponents();
         handleEvent();
         sesuaikanInput();
+    }
+
+    private Dimension dapatkanUkuranAwal() {
+        Dimension layar = Toolkit.getDefaultToolkit().getScreenSize();
+        int lebar = Math.max(360, Math.min(1500, layar.width - 80));
+        int tinggi = Math.max(560, Math.min(860, layar.height - 90));
+        return new Dimension(lebar, tinggi);
     }
 
     private void initComponents() {
@@ -127,20 +163,38 @@ public class MainFrame extends JFrame {
         root.setBackground(BG);
         setContentPane(root);
 
-        JPanel mainArea = new JPanel(new BorderLayout(12, 0));
+        mainArea = new ResponsiveScrollPanel();
         mainArea.setBackground(BG);
         mainArea.setBorder(new EmptyBorder(12, 12, 12, 12));
 
-        mainArea.add(buatSidebar(), BorderLayout.WEST);
-        mainArea.add(buatKontenUtama(), BorderLayout.CENTER);
+        sidebarPanel = buatSidebar();
+        kontenUtama = buatKontenUtama();
+        mainArea.add(sidebarPanel, BorderLayout.WEST);
+        mainArea.add(kontenUtama, BorderLayout.CENTER);
 
-        root.add(mainArea, BorderLayout.CENTER);
-        root.add(buatStatusBar(), BorderLayout.SOUTH);
+        JScrollPane scrollHalaman = new JScrollPane(mainArea);
+        scrollHalaman.setBorder(BorderFactory.createEmptyBorder());
+        scrollHalaman.getViewport().setBackground(BG);
+        scrollHalaman.getVerticalScrollBar().setUnitIncrement(18);
+        scrollHalaman.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+        statusBar = buatStatusBar();
+        root.add(scrollHalaman, BorderLayout.CENTER);
+        root.add(statusBar, BorderLayout.SOUTH);
+
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                terapkanLayoutResponsif();
+            }
+        });
+        SwingUtilities.invokeLater(this::terapkanLayoutResponsif);
     }
 
-    private JPanel buatSidebar() {
+    private RoundedPanel buatSidebar() {
         RoundedPanel sidebar = new RoundedPanel(new BorderLayout(12, 12), 12, Color.WHITE, BORDER);
         sidebar.setPreferredSize(new Dimension(340, 0));
+        sidebar.setMinimumSize(new Dimension(280, 520));
         sidebar.setBorder(new EmptyBorder(18, 18, 16, 18));
 
         JPanel header = new JPanel(new BorderLayout(12, 0));
@@ -251,17 +305,18 @@ public class MainFrame extends JFrame {
         label.setFont(new Font("SansSerif", Font.BOLD, 14));
         titlePanel.add(label, BorderLayout.CENTER);
 
-        JPanel grid = new JPanel(new GridLayout(0, 2, 8, 8));
-        grid.setOpaque(false);
+        previewGrid = new JPanel(new GridLayout(0, 2, 8, 8));
+        previewGrid.setOpaque(false);
         for (int i = 0; i < JUMLAH_KATEGORI; i++) {
-            grid.add(new PreviewCard(i));
+            previewGrid.add(new PreviewCard(i));
         }
 
-        JScrollPane scroll = new JScrollPane(grid);
+        JScrollPane scroll = new JScrollPane(previewGrid);
         scroll.setBorder(BorderFactory.createEmptyBorder());
         scroll.setOpaque(false);
         scroll.getViewport().setOpaque(false);
         scroll.getVerticalScrollBar().setUnitIncrement(12);
+        scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
         preview.add(titlePanel, BorderLayout.NORTH);
         preview.add(scroll, BorderLayout.CENTER);
@@ -272,19 +327,20 @@ public class MainFrame extends JFrame {
         JPanel content = new JPanel(new BorderLayout(12, 12));
         content.setOpaque(false);
 
-        RoundedPanel chartCard = new RoundedPanel(new BorderLayout(), 12, Color.WHITE, BORDER);
-        chartCard.setBorder(new EmptyBorder(8, 14, 8, 14));
+        chartCardPanel = new RoundedPanel(new BorderLayout(), 12, Color.WHITE, BORDER);
+        chartCardPanel.setBorder(new EmptyBorder(8, 14, 8, 14));
         barRacePanel = new BarRacePanel();
         barRacePanel.setPreferredSize(new Dimension(900, 430));
-        chartCard.add(barRacePanel, BorderLayout.CENTER);
+        chartCardPanel.add(barRacePanel, BorderLayout.CENTER);
 
-        JSplitPane bottomSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, buatLogCard(), buatTableCard());
+        bottomSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, buatLogCard(), buatTableCard());
         bottomSplit.setResizeWeight(0.28);
         bottomSplit.setBorder(BorderFactory.createEmptyBorder());
         bottomSplit.setDividerSize(10);
         bottomSplit.setOpaque(false);
+        bottomSplit.setOneTouchExpandable(true);
 
-        content.add(chartCard, BorderLayout.CENTER);
+        content.add(chartCardPanel, BorderLayout.CENTER);
         content.add(bottomSplit, BorderLayout.SOUTH);
         bottomSplit.setPreferredSize(new Dimension(900, 310));
         return content;
@@ -304,7 +360,8 @@ public class MainFrame extends JFrame {
 
         txtOutput = new JTextArea();
         txtOutput.setEditable(false);
-        txtOutput.setLineWrap(false);
+        txtOutput.setLineWrap(true);
+        txtOutput.setWrapStyleWord(true);
         txtOutput.setFont(new Font("Consolas", Font.PLAIN, 12));
         txtOutput.setForeground(new Color(132, 255, 154));
         txtOutput.setBackground(new Color(0, 23, 54));
@@ -314,6 +371,7 @@ public class MainFrame extends JFrame {
         JScrollPane scroll = new JScrollPane(txtOutput);
         scroll.setBorder(BorderFactory.createLineBorder(new Color(10, 42, 86)));
         scroll.getViewport().setBackground(new Color(0, 23, 54));
+        scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
         card.add(header, BorderLayout.NORTH);
         card.add(scroll, BorderLayout.CENTER);
@@ -324,28 +382,34 @@ public class MainFrame extends JFrame {
         RoundedPanel card = new RoundedPanel(new BorderLayout(8, 10), 12, Color.WHITE, BORDER);
         card.setBorder(new EmptyBorder(12, 12, 12, 12));
 
-        JPanel header = new JPanel(new BorderLayout(10, 0));
-        header.setOpaque(false);
+        tableHeaderPanel = new JPanel(new BorderLayout(10, 0));
+        tableHeaderPanel.setOpaque(false);
 
-        JPanel titlePanel = new JPanel(new BorderLayout(8, 0));
-        titlePanel.setOpaque(false);
-        titlePanel.add(new SmallSolidIcon(SmallSolidIcon.DATA), BorderLayout.WEST);
+        tableTitlePanel = new JPanel(new BorderLayout(8, 0));
+        tableTitlePanel.setOpaque(false);
+        tableTitlePanel.add(new SmallSolidIcon(SmallSolidIcon.DATA), BorderLayout.WEST);
         JLabel title = new JLabel("Data Massal 800.000 Objek");
         title.setFont(new Font("SansSerif", Font.BOLD, 13));
         title.setForeground(TEXT);
-        titlePanel.add(title, BorderLayout.CENTER);
+        tableTitlePanel.add(title, BorderLayout.CENTER);
 
-        JPanel tools = new JPanel(new BorderLayout(8, 0));
-        tools.setOpaque(false);
-        JTextField search = buatSearchField();
+        tableToolsPanel = new JPanel(new BorderLayout(8, 0));
+        tableToolsPanel.setOpaque(false);
+        txtSearch = buatSearchField();
         JButton filter = new IconOnlyButton();
-        tools.add(search, BorderLayout.CENTER);
-        tools.add(filter, BorderLayout.EAST);
+        filter.setToolTipText("Bersihkan pencarian");
+        filter.addActionListener(e -> {
+            txtSearch.setText("");
+            txtSearch.requestFocusInWindow();
+        });
+        tableToolsPanel.add(txtSearch, BorderLayout.CENTER);
+        tableToolsPanel.add(filter, BorderLayout.EAST);
 
-        header.add(titlePanel, BorderLayout.WEST);
-        header.add(tools, BorderLayout.EAST);
+        tableHeaderPanel.add(tableTitlePanel, BorderLayout.WEST);
+        tableHeaderPanel.add(tableToolsPanel, BorderLayout.EAST);
 
         tableModel = new GeometriTableModel();
+        hubungkanPencarianTabel();
         tblData = new JTable(tableModel);
         tblData.setRowHeight(28);
         tblData.setShowGrid(true);
@@ -379,7 +443,7 @@ public class MainFrame extends JFrame {
         JScrollBar bar = scroll.getVerticalScrollBar();
         bar.setUnitIncrement(18);
 
-        card.add(header, BorderLayout.NORTH);
+        card.add(tableHeaderPanel, BorderLayout.NORTH);
         card.add(scroll, BorderLayout.CENTER);
         return card;
     }
@@ -412,31 +476,173 @@ public class MainFrame extends JFrame {
         return field;
     }
 
+    private void hubungkanPencarianTabel() {
+        searchTimer = new Timer(220, e -> tableModel.setFilter(teksPencarianAktif()));
+        searchTimer.setRepeats(false);
+        txtSearch.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                jadwalkanFilterTabel();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                jadwalkanFilterTabel();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                jadwalkanFilterTabel();
+            }
+        });
+    }
+
+    private void jadwalkanFilterTabel() {
+        if (searchTimer != null) {
+            searchTimer.restart();
+        }
+    }
+
+    private String teksPencarianAktif() {
+        String teks = txtSearch.getText().trim();
+        return "Cari data...".equals(teks) ? "" : teks;
+    }
+
+    private void terapkanLayoutResponsif() {
+        if (mainArea == null || sidebarPanel == null || kontenUtama == null) {
+            return;
+        }
+
+        int lebar = Math.max(getContentPane().getWidth(), getWidth());
+        if (lebar <= 0) {
+            return;
+        }
+
+        int mode = lebar < BREAKPOINT_PHONE ? MODE_PHONE
+                : lebar < BREAKPOINT_DESKTOP ? MODE_TABLET : MODE_DESKTOP;
+        boolean desktop = mode == MODE_DESKTOP;
+        boolean phone = mode == MODE_PHONE;
+
+        mainArea.removeAll();
+        if (desktop) {
+            mainArea.setLayout(new BorderLayout(12, 0));
+            mainArea.setBorder(new EmptyBorder(12, 12, 12, 12));
+            sidebarPanel.setPreferredSize(new Dimension(340, 0));
+            mainArea.add(sidebarPanel, BorderLayout.WEST);
+            mainArea.add(kontenUtama, BorderLayout.CENTER);
+        } else {
+            mainArea.setLayout(new BorderLayout(0, 12));
+            int ruang = phone ? 8 : 10;
+            mainArea.setBorder(new EmptyBorder(ruang, ruang, ruang, ruang));
+            sidebarPanel.setPreferredSize(new Dimension(0, phone ? 690 : 620));
+            mainArea.add(sidebarPanel, BorderLayout.NORTH);
+            mainArea.add(kontenUtama, BorderLayout.CENTER);
+        }
+
+        terapkanUkuranKonten(desktop, phone);
+        terapkanHeaderTabel(phone);
+        terapkanStatusBar(phone);
+        terapkanKolomPreview(lebar, desktop);
+        aturKolomTabel(!desktop);
+
+        mainArea.revalidate();
+        mainArea.repaint();
+    }
+
+    private void terapkanUkuranKonten(boolean desktop, boolean phone) {
+        int tinggiChart = desktop ? 430 : phone ? 460 : 410;
+        int tinggiBawah = desktop ? 310 : phone ? 580 : 520;
+        chartCardPanel.setBorder(new EmptyBorder(8, phone ? 8 : 14, 8, phone ? 8 : 14));
+        barRacePanel.setPreferredSize(new Dimension(0, tinggiChart));
+        bottomSplit.setOrientation(desktop ? JSplitPane.HORIZONTAL_SPLIT : JSplitPane.VERTICAL_SPLIT);
+        bottomSplit.setResizeWeight(desktop ? 0.30 : 0.38);
+        bottomSplit.setPreferredSize(new Dimension(0, tinggiBawah));
+        SwingUtilities.invokeLater(() -> bottomSplit.setDividerLocation(desktop ? 0.30 : 0.38));
+    }
+
+    private void terapkanHeaderTabel(boolean phone) {
+        tableHeaderPanel.removeAll();
+        if (phone) {
+            tableHeaderPanel.setLayout(new BorderLayout(0, 8));
+            txtSearch.setPreferredSize(new Dimension(0, 30));
+            tableHeaderPanel.add(tableTitlePanel, BorderLayout.NORTH);
+            tableHeaderPanel.add(tableToolsPanel, BorderLayout.CENTER);
+        } else {
+            tableHeaderPanel.setLayout(new BorderLayout(10, 0));
+            txtSearch.setPreferredSize(new Dimension(210, 28));
+            tableHeaderPanel.add(tableTitlePanel, BorderLayout.WEST);
+            tableHeaderPanel.add(tableToolsPanel, BorderLayout.EAST);
+        }
+    }
+
+    private void terapkanStatusBar(boolean phone) {
+        statusBar.removeAll();
+        if (phone) {
+            statusBar.setLayout(new BorderLayout(0, 4));
+            statusBar.setPreferredSize(new Dimension(0, 86));
+            statusBar.setBorder(new EmptyBorder(8, 12, 8, 12));
+            statusRight.setLayout(new FlowLayout(FlowLayout.LEFT, 14, 0));
+            statusBar.add(statusLeft, BorderLayout.NORTH);
+            statusBar.add(statusRight, BorderLayout.CENTER);
+        } else {
+            statusBar.setLayout(new BorderLayout());
+            statusBar.setPreferredSize(new Dimension(0, 52));
+            statusBar.setBorder(new EmptyBorder(0, 16, 0, 18));
+            statusRight.setLayout(new GridLayout(1, 3, 26, 0));
+            statusBar.add(statusLeft, BorderLayout.WEST);
+            statusBar.add(statusRight, BorderLayout.EAST);
+        }
+        statusBar.revalidate();
+        statusBar.repaint();
+    }
+
+    private void terapkanKolomPreview(int lebar, boolean desktop) {
+        int kolom = desktop ? 2 : lebar < BREAKPOINT_PHONE ? 2 : lebar < 900 ? 3 : 4;
+        if (kolomPreviewAktif != kolom) {
+            previewGrid.setLayout(new GridLayout(0, kolom, 8, 8));
+            kolomPreviewAktif = kolom;
+        }
+    }
+
+    private void aturKolomTabel(boolean kecil) {
+        if (tblData == null) {
+            return;
+        }
+
+        tblData.setAutoResizeMode(kecil ? JTable.AUTO_RESIZE_OFF : JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
+        int[] lebar = kecil
+                ? new int[] { 54, 130, 160, 105, 105, 105, 150, 120 }
+                : new int[] { 46, 96, 110, 96, 96, 96, 160, 110 };
+        for (int i = 0; i < lebar.length; i++) {
+            tblData.getColumnModel().getColumn(i).setPreferredWidth(lebar[i]);
+        }
+    }
+
     private JPanel buatStatusBar() {
         JPanel status = new JPanel(new BorderLayout());
         status.setBackground(NAVY_DARK);
         status.setPreferredSize(new Dimension(0, 52));
         status.setBorder(new EmptyBorder(0, 16, 0, 18));
 
-        JPanel left = new JPanel(new BorderLayout(12, 0));
-        left.setOpaque(false);
-        left.add(new StatusOkIcon(), BorderLayout.WEST);
+        statusLeft = new JPanel(new BorderLayout(12, 0));
+        statusLeft.setOpaque(false);
+        statusLeft.add(new StatusOkIcon(), BorderLayout.WEST);
         lblStatusThread = new JLabel("Status: belum berjalan");
         lblStatusThread.setForeground(Color.WHITE);
         lblStatusThread.setFont(new Font("SansSerif", Font.BOLD, 13));
-        left.add(lblStatusThread, BorderLayout.CENTER);
+        statusLeft.add(lblStatusThread, BorderLayout.CENTER);
 
-        JPanel right = new JPanel(new GridLayout(1, 3, 26, 0));
-        right.setOpaque(false);
+        statusRight = new JPanel(new GridLayout(1, 3, 26, 0));
+        statusRight.setOpaque(false);
         JLabel threads = statusItem("Threads: Optimal");
         lblStatusData = statusItem("Data: 0");
         lblStatusWaktu = statusItem("Waktu: 0 ms");
-        right.add(threads);
-        right.add(lblStatusData);
-        right.add(lblStatusWaktu);
+        statusRight.add(threads);
+        statusRight.add(lblStatusData);
+        statusRight.add(lblStatusWaktu);
 
-        status.add(left, BorderLayout.WEST);
-        status.add(right, BorderLayout.EAST);
+        status.add(statusLeft, BorderLayout.WEST);
+        status.add(statusRight, BorderLayout.EAST);
         return status;
     }
 
@@ -512,6 +718,11 @@ public class MainFrame extends JFrame {
 
     private void handleEvent() {
         cmbJenisBenda.addActionListener(e -> sesuaikanInput());
+        JTextField[] fields = { txtInput1, txtInput2, txtInput3, txtInput4, txtInput5 };
+        for (JTextField field : fields) {
+            field.addActionListener(e -> btnHitung.doClick());
+        }
+        getRootPane().setDefaultButton(btnHitung);
 
         btnHitung.addActionListener(e -> {
             try {
@@ -963,16 +1174,42 @@ public class MainFrame extends JFrame {
         private final String[] kolom = {
                 "No", "Nama", "Jenis", "Luas", "Keliling", "Volume", "Progress", "Status"
         };
-        private List<BendaGeometri> data = new ArrayList<>();
+        private List<BendaGeometri> dataAsli = new ArrayList<>();
+        private List<BendaGeometri> dataTampil = new ArrayList<>();
+        private String filterAktif = "";
 
         public void setData(List<BendaGeometri> data) {
-            this.data = data;
+            this.dataAsli = data;
+            terapkanFilter();
+        }
+
+        public void setFilter(String filter) {
+            this.filterAktif = filter == null ? "" : filter.trim().toLowerCase();
+            terapkanFilter();
+        }
+
+        private void terapkanFilter() {
+            if (filterAktif.isEmpty()) {
+                this.dataTampil = dataAsli;
+            } else {
+                List<BendaGeometri> hasil = new ArrayList<>();
+                for (BendaGeometri benda : dataAsli) {
+                    String jenis = benda.getClass().getSimpleName();
+                    String status = benda.statusProses == null ? "" : benda.statusProses;
+                    if (benda.namaBenda.toLowerCase().contains(filterAktif)
+                            || jenis.toLowerCase().contains(filterAktif)
+                            || status.toLowerCase().contains(filterAktif)) {
+                        hasil.add(benda);
+                    }
+                }
+                this.dataTampil = hasil;
+            }
             fireTableDataChanged();
         }
 
         public void refreshData() {
-            if (!data.isEmpty()) {
-                fireTableRowsUpdated(0, Math.min(data.size() - 1, 1500));
+            if (!dataTampil.isEmpty()) {
+                fireTableRowsUpdated(0, Math.min(dataTampil.size() - 1, 1500));
             }
         }
 
@@ -982,7 +1219,7 @@ public class MainFrame extends JFrame {
 
         @Override
         public int getRowCount() {
-            return data.size();
+            return dataTampil.size();
         }
 
         @Override
@@ -997,7 +1234,7 @@ public class MainFrame extends JFrame {
 
         @Override
         public Object getValueAt(int rowIndex, int columnIndex) {
-            BendaGeometri benda = data.get(rowIndex);
+            BendaGeometri benda = dataTampil.get(rowIndex);
             switch (columnIndex) {
                 case 0:
                     return rowIndex + 1;
@@ -1064,10 +1301,16 @@ public class MainFrame extends JFrame {
 
             int width = getWidth();
             int height = getHeight();
-            gambarHeader(g, width);
-            gambarGrid(g, width, height);
-            gambarBar(g, width, height);
-            gambarTimeline(g, width, height);
+            if (width < 760) {
+                gambarHeaderRingkas(g, width);
+                gambarBarRingkas(g, width, height);
+                gambarTimelineRingkas(g, width, height);
+            } else {
+                gambarHeader(g, width);
+                gambarGrid(g, width, height);
+                gambarBar(g, width, height);
+                gambarTimeline(g, width, height);
+            }
 
             g.dispose();
         }
@@ -1096,6 +1339,34 @@ public class MainFrame extends JFrame {
             g.setFont(new Font("SansSerif", Font.BOLD, 13));
             g.drawString("800.000 data total", badgeX + 44, 42);
             drawDatabaseIcon(g, badgeX + 18, 28, BLUE);
+        }
+
+        private void gambarHeaderRingkas(Graphics2D g, int width) {
+            HeaderIcon chart = new HeaderIcon(HeaderIcon.CHART);
+            Graphics2D iconGraphics = (Graphics2D) g.create(16, 14, 42, 42);
+            chart.setSize(42, 42);
+            chart.paint(iconGraphics);
+            iconGraphics.dispose();
+
+            int textX = 70;
+            g.setColor(TEXT);
+            g.setFont(new Font("SansSerif", Font.BOLD, width < 420 ? 18 : 22));
+            drawFittedString(g, "Visualisasi Bar Chart", textX, 34, width - textX - 16);
+            g.setColor(new Color(80, 96, 132));
+            g.setFont(new Font("SansSerif", Font.PLAIN, 12));
+            drawFittedString(g, "100.000 data untuk setiap benda", textX, 52, width - textX - 16);
+
+            int badgeW = Math.min(168, width - 32);
+            int badgeX = 16;
+            int badgeY = 72;
+            g.setColor(new Color(245, 249, 255));
+            g.fillRoundRect(badgeX, badgeY, badgeW, 30, 9, 9);
+            g.setColor(BORDER);
+            g.drawRoundRect(badgeX, badgeY, badgeW, 30, 9, 9);
+            g.setColor(BLUE);
+            g.setFont(new Font("SansSerif", Font.BOLD, 12));
+            drawDatabaseIcon(g, badgeX + 14, badgeY + 6, BLUE);
+            drawFittedString(g, "800.000 data total", badgeX + 40, badgeY + 20, badgeW - 48);
         }
 
         private void gambarGrid(Graphics2D g, int width, int height) {
@@ -1149,8 +1420,52 @@ public class MainFrame extends JFrame {
                 g.setFont(new Font("SansSerif", Font.BOLD, 14));
                 g.drawString(NAMA_KATEGORI[index], xLabel, y + 18);
 
+                g.setColor(new Color(224, 235, 251));
+                g.fillRoundRect(xAwal, y, lebarMaks, tinggiBar, 5, 5);
                 gambarIsiBar(g, xAwal, y, lebar, tinggiBar, warnaBar[index]);
                 gambarNilaiBar(g, xAwal + lebar, y, nilai[index], warnaBar[index]);
+            }
+        }
+
+        private void gambarBarRingkas(Graphics2D g, int width, int height) {
+            Integer[] urutan = new Integer[JUMLAH_KATEGORI];
+            for (int i = 0; i < JUMLAH_KATEGORI; i++) {
+                urutan[i] = i;
+            }
+            Arrays.sort(urutan, Comparator
+                    .comparingInt((Integer i) -> nilai[i])
+                    .reversed()
+                    .thenComparingInt(Integer::intValue));
+
+            int xNomor = 24;
+            int xAwal = 52;
+            int xAkhir = Math.max(xAwal + 180, width - 24);
+            int lebarMaks = xAkhir - xAwal;
+            int yAwal = 126;
+            int yTimeline = Math.max(yAwal + 270, height - 82);
+            int rowHeight = Math.max(32, (yTimeline - yAwal) / JUMLAH_KATEGORI);
+            int tinggiBar = Math.max(9, Math.min(12, rowHeight / 3));
+
+            for (int posisi = 0; posisi < urutan.length; posisi++) {
+                int index = urutan[posisi];
+                int y = yAwal + posisi * rowHeight;
+                int barY = y + 18;
+                int lebar = (int) (lebarMaks * (nilai[index] / (double) DATA_PER_BENDA));
+
+                gambarNomorRingkas(g, xNomor, barY + tinggiBar / 2, posisi + 1, warnaBar[index]);
+
+                g.setColor(TEXT);
+                g.setFont(new Font("SansSerif", Font.BOLD, 12));
+                String nilaiTeks = formatInteger(nilai[index]);
+                int nilaiW = g.getFontMetrics().stringWidth(nilaiTeks);
+                drawFittedString(g, NAMA_KATEGORI[index], xAwal, y + 11,
+                        Math.max(90, lebarMaks - nilaiW - 12));
+                g.setColor(warnaBar[index].darker());
+                g.drawString(nilaiTeks, xAkhir - nilaiW, y + 11);
+
+                g.setColor(new Color(224, 235, 251));
+                g.fillRoundRect(xAwal, barY, lebarMaks, tinggiBar, 6, 6);
+                gambarIsiBar(g, xAwal, barY, lebar, tinggiBar, warnaBar[index]);
             }
         }
 
@@ -1159,6 +1474,16 @@ public class MainFrame extends JFrame {
             g.fillOval(x - 13, y - 13, 26, 26);
             g.setColor(Color.WHITE);
             g.setFont(new Font("SansSerif", Font.BOLD, 14));
+            String teks = String.valueOf(nomor);
+            FontMetrics fm = g.getFontMetrics();
+            g.drawString(teks, x - fm.stringWidth(teks) / 2, y + fm.getAscent() / 2 - 3);
+        }
+
+        private void gambarNomorRingkas(Graphics2D g, int x, int y, int nomor, Color warna) {
+            g.setColor(warna);
+            g.fillOval(x - 10, y - 10, 20, 20);
+            g.setColor(Color.WHITE);
+            g.setFont(new Font("SansSerif", Font.BOLD, 11));
             String teks = String.valueOf(nomor);
             FontMetrics fm = g.getFontMetrics();
             g.drawString(teks, x - fm.stringWidth(teks) / 2, y + fm.getAscent() / 2 - 3);
@@ -1225,6 +1550,45 @@ public class MainFrame extends JFrame {
             drawCentered(g, status, width / 2, height - 12);
         }
 
+        private void gambarTimelineRingkas(Graphics2D g, int width, int height) {
+            int y = height - 50;
+            int xAwal = 28;
+            int xAkhir = Math.max(xAwal + 180, width - 28);
+            int progressWidth = xAkhir - xAwal;
+            double rasio = TOTAL_DATA_DEMO == 0 ? 0 : totalSelesai / (double) TOTAL_DATA_DEMO;
+            int xAktif = xAwal + (int) (progressWidth * rasio);
+
+            g.setColor(NAVY);
+            g.setFont(new Font("SansSerif", Font.BOLD, 11));
+            g.drawString("WAKTU BERJALAN", xAwal, y - 18);
+
+            g.setColor(new Color(184, 194, 214));
+            g.setStroke(new BasicStroke(5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+            g.drawLine(xAwal, y, xAkhir, y);
+            g.setColor(BLUE);
+            g.drawLine(xAwal, y, xAktif, y);
+            g.setStroke(new BasicStroke(1f));
+
+            String[] tick = width < 420 ? new String[] { "0%", "50%", "100%" }
+                    : new String[] { "0%", "25%", "50%", "75%", "100%" };
+            g.setFont(new Font("SansSerif", Font.BOLD, 10));
+            for (int i = 0; i < tick.length; i++) {
+                double posisi = tick.length == 1 ? 0 : i / (double) (tick.length - 1);
+                int x = xAwal + (int) (progressWidth * posisi);
+                g.setColor(posisi <= rasio ? BLUE : new Color(168, 178, 198));
+                g.fillOval(x - 5, y - 5, 10, 10);
+                g.setColor(TEXT);
+                drawCentered(g, tick[i], x, y + 22);
+            }
+
+            g.setColor(new Color(45, 84, 160));
+            g.setFont(new Font("SansSerif", Font.PLAIN, 11));
+            String status = berjalan
+                    ? "Data berubah saat worker menyelesaikan kategori"
+                    : "Selesai dalam " + durasiMs + " ms";
+            drawCenteredFitted(g, status, width / 2, height - 8, width - 32);
+        }
+
         private void drawDatabaseIcon(Graphics2D g, int x, int y, Color color) {
             g.setColor(color);
             g.drawOval(x, y, 18, 8);
@@ -1237,6 +1601,62 @@ public class MainFrame extends JFrame {
         private void drawCentered(Graphics2D g, String text, int centerX, int baselineY) {
             FontMetrics fm = g.getFontMetrics();
             g.drawString(text, centerX - fm.stringWidth(text) / 2, baselineY);
+        }
+
+        private void drawCenteredFitted(Graphics2D g, String text, int centerX, int baselineY, int maxWidth) {
+            String fitted = fitText(g, text, maxWidth);
+            FontMetrics fm = g.getFontMetrics();
+            g.drawString(fitted, centerX - fm.stringWidth(fitted) / 2, baselineY);
+        }
+
+        private void drawFittedString(Graphics2D g, String text, int x, int baselineY, int maxWidth) {
+            g.drawString(fitText(g, text, maxWidth), x, baselineY);
+        }
+
+        private String fitText(Graphics2D g, String text, int maxWidth) {
+            FontMetrics fm = g.getFontMetrics();
+            if (maxWidth <= 0 || fm.stringWidth(text) <= maxWidth) {
+                return text;
+            }
+
+            String suffix = "...";
+            int suffixWidth = fm.stringWidth(suffix);
+            int end = text.length();
+            while (end > 1 && fm.stringWidth(text.substring(0, end)) + suffixWidth > maxWidth) {
+                end--;
+            }
+            return text.substring(0, Math.max(1, end)) + suffix;
+        }
+    }
+
+    private static class ResponsiveScrollPanel extends JPanel implements Scrollable {
+        ResponsiveScrollPanel() {
+            super(new BorderLayout(12, 0));
+        }
+
+        @Override
+        public Dimension getPreferredScrollableViewportSize() {
+            return getPreferredSize();
+        }
+
+        @Override
+        public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
+            return 24;
+        }
+
+        @Override
+        public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
+            return Math.max(120, visibleRect.height - 80);
+        }
+
+        @Override
+        public boolean getScrollableTracksViewportWidth() {
+            return true;
+        }
+
+        @Override
+        public boolean getScrollableTracksViewportHeight() {
+            return false;
         }
     }
 
